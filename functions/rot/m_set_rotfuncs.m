@@ -3,15 +3,14 @@
 function funcs=m_set_rotfuncs(varargin)
 %% Named arguments
 %
-% * |'sys_rhs'| (mandatory), 
-% * |'rotation'| (mandatory),
-% * |'exp_rotation'| (mandatory),
-% * |'sys_ntau'|, 
+% * |'sys_rhs'| (mandatory), (function handle)
+% * |'rotation'| (mandatory), (matrix, or cell with matricies)
+% * |'exp_rotation'| (mandatory), (function handle)
+% * |'sys_ntau'|, (function handle, returns ind of taus)
 % * |'sys_cond'|, (DOES NOT SUPPORT sys_cond UNTIL m_rot_cond IS UPDATED)
 % * |'sys_deri'| (unused),
 % * |'sys_dtau'| (unused).
 %
-% See rotsym_demo for example usage
 % uses defaults df_deriv for partial derivatives
 %
 % (c) DDE-BIFTOOL v. 3.1.1(29), 15/04/2014
