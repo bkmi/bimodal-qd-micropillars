@@ -6,6 +6,8 @@ addpath(present_working_directory)
 addpath(strcat(present_working_directory,'/functions/'))
 addpath(strcat(present_working_directory,'/functions/numerical_systems/'))
 addpath(strcat(present_working_directory,'/functions/rot'))
+addpath(strcat(present_working_directory,'/functions/bifcont_data_gen_tools'))
+addpath(strcat(present_working_directory,'/functions/data_analysis_tools'))
 addpath(strcat(present_working_directory,'/scripts/'))
 addpath('~/dde_biftool_v3.1.1/ddebiftool/'); 
 addpath('~/dde_biftool_v3.1.1/ddebiftool_extra_psol/');
