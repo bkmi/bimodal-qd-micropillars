@@ -2,15 +2,29 @@
 
 clear;
 
+feedPhaseMat = [0, 0; 0, 0];
+feedAmpMat = [0, 0; 0, 0];
+
 % Setup parameters, save them?
-%setup_params_nonDim_CnstCplRatio('save',0,'feed_ampli',0.373, 'alpha_par',0,'clear',0)
-%setup_params_nonDim_CnstCplRatio('save',0,'feed_ampli',0.1, 'alpha_par',0,'clear',0)
-setup_params_nonDim_CnstCplRatio('save',1,'feed_ampli',0.373, 'feed_phase',0,'alpha_par',0,'clear',0)
+% setup_params_nonDim_CnstCplRatio('save',0,'feed_ampli',0.373, 'alpha_par',0,'clear',0)
+% setup_params_nonDim_CnstCplRatio('save',0,'feed_ampli',0.1, 'alpha_par',0,'clear',0)
+% setup_params_nonDim_CnstCplRatio('save',1,'feed_ampli',0.373, 'feed_phase',0,'alpha_par',0,'clear',0)
+
+setup_params_nonDim_CnstCplRatio(...
+    'save',1, ...
+    'alpha_par',0, ...
+    'feed_ampli',0.373, ...
+    'feed_ampliMatrix', feedAmpMat, ...
+    'feed_phase',0, ... 'feed_phaseMatrix', feedPhaseMat, ...
+    'clear',0)
+
+
 
 
 % Create and save turn on time series
+% 'dde23_options',ddeset('RelTol',10^-8,'OutputFcn', @odeplot)
 dde23_soln = solver([1e-9;0;1e-9;0;0;0], [0,50], param, master_options, ...
-    'plot',1,'dde23_options',ddeset('RelTol',10^-8,'OutputFcn', @odeplot));
+    'plot',1);
 
 %% Create initial branch
 [branch_stst, nunst_branch_stst, ind_fold, ind_hopf] = ... 

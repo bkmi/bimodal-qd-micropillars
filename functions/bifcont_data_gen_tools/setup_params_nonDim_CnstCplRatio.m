@@ -203,6 +203,10 @@ addParameter(p,'populate_wrkspc','option');
 % Parse inputs/options.
 parse(p,options)
 
+%{
+% This code is crap. I wanted to do the opposite of what it says. Instead I
+% removed the parameters here from p.
+
 % Raise flags for values which are not allowed to be changed
 if any(strcmp('epsi0',p.UsingDefaults))
     error('You cannot alter the value of epsi0')
@@ -217,7 +221,7 @@ elseif any(strcmp('hbar_omega',p.UsingDefaults))
 elseif any(strcmp('epsi_tilda',p.UsingDefaults))
     error('You cannot alter the value of epsi_tilda')
 end
-
+%}
 
 %% Update values, Create parameter struct and arrays
 % Define params from user input + defaults
@@ -471,8 +475,8 @@ end
 current_report = strcat('J=',num2str(J,'%1.1e'),'_');
 
 % report feedback params
-feed_tau_report = strcat('tau=',num2str(tau_fb),'_');
-feed_amp_report = strcat('amp=',num2str(feed_ampli));
+feed_tau_report = strcat('fTau=',num2str(tau_fb),'_');
+feed_amp_report = strcat('fAmp=',num2str(feed_ampli));
 
 % report alpha (line width enchancement) if NONZERO
 if alpha_par == 0
@@ -481,10 +485,29 @@ elseif alpha_par ~= 0
     alpha_par_report = strcat('_alpha=',num2str(alpha_par));
 end
 
+% report feed_ampliMatrix
+if ~any(strcmp('feed_ampliMatrix',p.UsingDefaults))
+    feed_ampliMat_report = strcat('_fAmpMat=', ...
+        mat2str(feed_ampliMatrix) );
+    feed_ampliMat_report = strrep(feed_ampliMat_report, ' ', ',');
+else
+    feed_ampliMat_report = '';
+end
+    
+% report feed_phaseMatrix
+if ~any(strcmp('feed_phaseMatrix',p.UsingDefaults))
+    feed_phaseMat_report = strcat('_fPhsMat=',...
+        mat2str(feed_phaseMatrix) );
+    feed_phaseMat_report = strrep(feed_phaseMat_report, ' ', ',');
+else
+    feed_phaseMat_report = '';
+end
+
 % Folder shall be named below:
 datadir_specific = strcat(options.datadir_parent, ... 
     mode_report,dimension_report,current_report, ...
-    'FEED_',feed_tau_report,feed_amp_report, ...
+    feed_tau_report,feed_phaseMat_report, ...
+    feed_amp_report,feed_ampliMat_report, ...
     alpha_par_report, '/');
 
 
