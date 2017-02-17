@@ -9,7 +9,8 @@ function [ figHandle ] = plot_solver( sol, J, hist, ...
 %       ef_units_str, ...
 %       n_units_str
 
-if numel(hist) == 4;
+if numel(hist) == 4 ...
+        || ( isa(hist,'struct') && numel(hist.history)==4 ) ;
     % SINGLE EF
     figHandle = figure;
     clf;
@@ -46,7 +47,8 @@ if numel(hist) == 4;
     title('Carrier Density vs Time')
     xlabel(strcat({'Time '}, time_units))
     ylabel(strcat({'n_r(t) '},n_units))
-elseif numel(hist) == 6
+elseif numel(hist) == 6 ...
+        || ( isa(hist,'struct') && numel(hist.history)==6 ) ;
     % DUAL EF
     figHandle = figure;
     clf;

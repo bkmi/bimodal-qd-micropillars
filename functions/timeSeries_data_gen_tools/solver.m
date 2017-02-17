@@ -43,6 +43,9 @@ function [ dde23_soln, figHandle ] = solver( hist, timeSpan, ...
 %       'save_name' = 'dde23_soln_name'
 %           The solver will save the dde23_soln as 'dde23_soln_name' in 
 %           a datadir_specific given by master_options. It will overwrite.
+%       'quiet' = 0, 1
+%           0 -> usual output.
+%           1 -> no disp output.
 %
 %   master_options:
 %       'save' = 0, 1
@@ -74,6 +77,7 @@ p.addParameter('par_overwrite',0)
 p.addParameter('plot',0)
 p.addParameter('dde23_options',ddeset('RelTol',10^-8))
 p.addParameter('save_name', 'dde23_soln')
+p.addParameter('quiet', 0)
 
 % Master option defaults
 p.addParameter('save',0)
@@ -137,7 +141,9 @@ elseif options.dimensional == 0
         par(17),par(18),par(19),par(20),par(21),par(22),par(23), ...
         par(24),par(25),par(26),par(27),par(28),par(29));
 
-    fprintf('Solver is using dimensionless units for output.\n')
+    if options.quiet == 0;
+        fprintf('Solver is using dimensionless units for output.\n')
+    end
     dde23_ef_units = '(\epsilon_{ss} \epsilon_{tilda})^{-1/2}';
     dde23_time_units = '(\tau_{sp})';
     dde23_n_units = '(S^{in} \tau_{sp})^{-1}';
@@ -149,17 +155,19 @@ end
 
 %% Solver + Plotter
 % Setup/use dde23 solver
-if isa(hist,'function_handle')
-    % If hist is a function
-    fprintf('History vector is a function. \n')
-    
-elseif isa(hist,'double')
-    % If hist is a vector
-    fprintf(strcat('History vector: \nhist=',mat2str(hist),'\n'))
-else
-    disp('I do not know what type hist is.')
-end
+if options.quiet == 0;
+    if isa(hist,'function_handle')
+        % If hist is a function
+        fprintf('History vector is a function. \n')
 
+    elseif isa(hist,'double')
+        % If hist is a vector
+        fprintf(strcat('History vector: \nhist=',mat2str(hist),'\n'))
+    else
+        disp('I do not know what type hist is.')
+    end
+end
+    
 lags = par(param.tau_fb.index); % lags == feedback time
 dde23_soln = dde23(@(t,y,z)sys_4solver([y,z]),...
     lags,hist,timeSpan, options.dde23_options);
@@ -177,8 +185,10 @@ end
 datadir_specific = options.datadir_specific;
 
 % Where will it save?
-if options.save == 1
-    fprintf(strcat('\n\n Saving in subfolder:\n', datadir_specific,'\n'))
+if options.quiet == 0;
+    if options.save == 1
+        fprintf(strcat('\n\n Saving in subfolder:\n', datadir_specific,'\n'))
+    end
 end
     
 if options.save == 1 && ...

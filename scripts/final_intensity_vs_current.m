@@ -12,7 +12,7 @@ solnTurnOn = repmat(...
     'timeSeries',struct, ...
     'J',0,...
     'params',struct, ...
-    'calcTime',0),numPoints);
+    'calcTime',0),[numPoints,1]);
 Jarray = linspace(...
     Jmin, ...
     Jmax, ...
@@ -57,11 +57,11 @@ for i = 1:numPoints
 end
 
 fig1 = figure;
-hold on
 % strong red
-scatter(Jarray,strongFinalIntensity,'r')
+semilogy(Jarray,strongFinalIntensity,'r')
+hold on
 % weak blue
-scatter(Jarray,weakFinalIntensity,'b')
+semilogy(Jarray,weakFinalIntensity,'b')
 title('Turn on final intensity vs current amplitude')
 hold off
 
@@ -133,12 +133,13 @@ for i = 1:numPoints
         solnSweep(i).timeSeries.y(4,end)] );
 end
 
+
 fig2 = figure;
-hold on
 % strong red
-scatter(Jarray,strongFinalIntensitySweep,'r')
+semilogy(Jarray,strongFinalIntensitySweep,'r')
+hold on
 % weak blue
-scatter(Jarray,weakFinalIntensitySweep,'b')
-title('Sweep final intensity vs current amplitude')
+semilogy(Jarray,weakFinalIntensitySweep,'b')
+title('Final intensity vs Current amplitude, "Sweep"')
 hold off
 
