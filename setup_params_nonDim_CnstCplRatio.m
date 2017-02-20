@@ -118,7 +118,7 @@ hbar_omega = 1.38*(1.6e-19); 	% eV -> J
 default_feed_phase = 0;
 default_feed_ampli = 0.373;
 default_tau_fb 	   = 0.8;
-default_feed_phaseMatrix = [0, 0; 0, 0];
+default_feed_phaseMatrix = [1, 1; 1, 1];
 default_feed_ampliMatrix = [1, 1; 1, 1];
 % (Physical constants go here in index)
 % Further params
