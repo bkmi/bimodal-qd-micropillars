@@ -33,6 +33,7 @@ function [ newParam ] = updateParams( param, varargin )
 % Create parser
 p = inputParser;
 p.KeepUnmatched = true;
+p.PartialMatching = false;
 
 % Add parameters
 p.addParameter('par_overwrite', param.values)

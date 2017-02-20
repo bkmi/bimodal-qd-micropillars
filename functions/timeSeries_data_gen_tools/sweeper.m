@@ -13,6 +13,9 @@ function [ soln, figFirst, figLast ] = sweeper( ind_parSweep, parBound, param, v
 %       soln
 %
 %   Options:
+%       'plot' = 0, 1
+%           plot = 0 means nothing will be plotted
+%           plot = 1 means the first and last time series will be plotted.
 %       'durTimeSeries' = 10
 %           Duration of time series for swept time series. Turn on is
 %           longer by 50%
@@ -43,6 +46,7 @@ function [ soln, figFirst, figLast ] = sweeper( ind_parSweep, parBound, param, v
 p = inputParser;
 
 % General option defaults
+p.addParameter('plot',0)
 p.addParameter('durTimeSeries', 10)
 p.addParameter('oscStepsCheck', 10)
 p.addParameter('oscTol', 1e-6)
@@ -92,7 +96,7 @@ tic; % Start timer
     [1e-9;0;1e-9;0;0;0], ...
     [0,1.5*options.durTimeSeries], ...
     soln(1).param, ...
-    'plot',1, ...
+    'plot',options.plot, ...
     'quiet', 1);
 % 'dde23_options',ddeset('RelTol',10^-8,'OutputFcn', @odeplot)
 
@@ -130,7 +134,7 @@ for i = 2:options.numSweepSteps
             soln(i-1).timeSeries.x(end)+options.durTimeSeries], ...
             soln(i).param,...
             'quiet', 1, ...
-            'plot', 1);
+            'plot', options.plot);
     end
     soln(i).calcTime = toc; % Stop Timer
 end
