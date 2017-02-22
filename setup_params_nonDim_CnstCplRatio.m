@@ -27,6 +27,11 @@ function [ param ] = setup_params_nonDim_CnstCplRatio( varargin )
 %       'datadir_parent' = '../data_bimodal-qd-micropillars/'
 %           By default, this is set as above. Determine the parent data 
 %           saving directory.
+%       'datadir_specific'
+%           This is normally chosen automatically based on parameters, but
+%           if you call this then you overwrite that system and save
+%           directly to this exact folder...
+%           REQUIRES A TRAILING /
 %       'dimensional' = 0, 1
 %           By default, this is set to 0. When 'dimensional' = 0, the
 %           function applies a non-dimensionalized system. When
@@ -45,34 +50,54 @@ function [ param ] = setup_params_nonDim_CnstCplRatio( varargin )
 %
 
 %% Options/Setup
-% Create an options struct from varargin, preserves cell arrays.
-for i = 1:length(varargin)
-    if iscell(varargin{i})
-        varargin{i} = varargin(i);
-    end
-end
-options = struct(varargin{:});
 
-% Setup defaults and behavior sorting.
-if ~isfield(options,'datadir_parent')
-    options.datadir_parent = '../data_bimodal-qd-micropillars/';
-end
+fp = inputParser;
+fp.KeepUnmatched = true;
+fp.PartialMatching = false;
 
-if ~isfield(options,'dimensional')
-    options.dimensional = 0;
-end
+% General option defaults
+fp.addParameter('datadir_parent','../data_bimodal-qd-micropillars/')
+fp.addParameter('datadir_specific','../data_bimodal-qd-micropillars/')
+fp.addParameter('dimensional',0)
+fp.addParameter('clear', 1)
+fp.addParameter('save', 0)
+fp.addParameter('populate_wrkspc', 1)
 
-if ~isfield(options,'clear')
-    options.clear = 1;
-end
+% Set options
+parse(fp,varargin{:})
 
-if ~isfield(options,'save')
-    options.save = 0;
-end
+% Make final options
+options = fp.Results;
 
-if ~isfield(options,'populate_wrkspc')
-    options.populate_wrkspc = 1;
-end
+
+% % Create an options struct from varargin, preserves cell arrays.
+% for i = 1:length(varargin)
+%     if iscell(varargin{i})
+%         varargin{i} = varargin(i);
+%     end
+% end
+% options = struct(varargin{:});
+% 
+% % Setup defaults and behavior sorting.
+% if ~isfield(options,'datadir_parent')
+%     options.datadir_parent = '../data_bimodal-qd-micropillars/';
+% end
+% 
+% if ~isfield(options,'dimensional')
+%     options.dimensional = 0;
+% end
+% 
+% if ~isfield(options,'clear')
+%     options.clear = 1;
+% end
+% 
+% if ~isfield(options,'save')
+%     options.save = 0;
+% end
+% 
+% if ~isfield(options,'populate_wrkspc')
+%     options.populate_wrkspc = 1;
+% end
 
 
 % Add path, prepare matlab
@@ -156,6 +181,8 @@ end
 % This section allows the user to set parameter values by using the syntax:
 % 'parameter', value
 p = inputParser;
+p.KeepUnmatched = true;
+p.PartialMatching = false;
 
 % Add parameters
 addParameter(p,'kappa_s', default_kappa_s);
@@ -504,11 +531,23 @@ else
 end
 
 % Folder shall be named below:
-datadir_specific = strcat(options.datadir_parent, ... 
-    mode_report,dimension_report,current_report, ...
-    feed_tau_report,feed_phaseMat_report, ...
-    feed_amp_report,feed_ampliMat_report, ...
-    alpha_par_report, '/');
+if ~any(strcmp('datadir_specific', p.UsingDefaults))
+    % When datadir_specific is chosen by user
+    datadir_specific = options.datadir_specific;
+    
+    if datadir_specific(end) ~= '/'
+        % If necessary, add a trailing /
+        datadir_specific = [datadir_specific,'/'];
+    end
+    
+else
+    % When datadir_specific is not chosen by the user
+    datadir_specific = strcat(options.datadir_parent, ... 
+        mode_report,dimension_report,current_report, ...
+        feed_tau_report,feed_phaseMat_report, ...
+        feed_amp_report,feed_ampliMat_report, ...
+        alpha_par_report, '/');
+end
 
 
 % Make user confirm overwrite
