@@ -228,7 +228,7 @@ addParameter(p,'save', 'option');
 addParameter(p,'populate_wrkspc','option');
 
 % Parse inputs/options.
-parse(p,options)
+parse(p,varargin{:})
 
 %{
 % This code is crap. I wanted to do the opposite of what it says. Instead I
