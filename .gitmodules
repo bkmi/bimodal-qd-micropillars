@@ -1,0 +1,3 @@
+[submodule "ddebiftool_multirot"]
+	path = ddebiftool_multirot
+	url = https://github.com/machism0/ddebiftool_multirot.git
