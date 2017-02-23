@@ -15,6 +15,10 @@ function [ fileData ] = loader( varargin )
 %       'include' = {str, str, ...} (cell array of files include)
 %           These files will be loaded. Nothing else will be loaded from
 %           the folder.
+%       'overwrite' = 0, 1
+%           When overwrite is 0, the function will ask if the user wants to
+%           overwrite files. When overwrite is 1 the function will
+%           automatically overwrite.
 %       
 
 %% Options
@@ -25,6 +29,7 @@ p.addParameter('include', cell(0));
 p.addParameter('exclude', cell(0));
 p.addParameter('datadir_parent','../data_bimodal-qd-micropillars/')
 p.addParameter('datadir_specific','')
+p.addParameter('overwrite',0)
 
 % Set options
 parse(p,varargin{:})
@@ -32,12 +37,15 @@ parse(p,varargin{:})
 % Make final options
 options = p.Results;
 
+
 % Add trailing / to datadir_specific and  datadir_parent
-if options.datadir_specific(end) ~= '/'
+if ~any(strcmp('datadir_specific',p.UsingDefaults)) ...
+    && options.datadir_specific(end) ~= '/'
     options.datadir_specific(end+1) = '/';
 end
 
-if options.datadir_parent(end) ~= '/'
+if ~any(strcmp('datadir_parent',p.UsingDefaults)) ...
+        && options.datadir_parent(end) ~= '/'
     options.datadir_parent(end+1) = '/';
 end
 
@@ -66,7 +74,8 @@ end
 
 
 % Select data folder location
-if ~isdir(options.datadir_specific)
+if ~isdir(options.datadir_specific) ...
+        || any(strcmp('datadir_specific',p.UsingDefaults))
     % If options.datadir_specific doesn't point to a directory
     directory = dir(options.datadir_parent);
     sub_all_list = {directory.name};
@@ -150,21 +159,27 @@ fprintf('\n\n\n\nFiles loaded:\n')
 disp(data)
 fprintf('\n\n')
 
-% Would the user like to overwrite files?
-loaded_overwrite_opt = ...
-    input(['\n\nWARNING: You have loaded this data.',...
-    '\nShould scripts overwrite saved results? \n0 = no \n1 = yes \n\n']);
-% Force user to choose: OVERWRITE or not.
-while(1)
-    if loaded_overwrite_opt == 1
-        saveit = 1; %Save and OVERWRITE
-        fprintf('\nScripts will OVERWRITE saved results!!!\n\n')
-        break
-    elseif loaded_overwrite_opt == 0
-        saveit = 0; %Don't save and don't overwrite.
-        fprintf('\nScripts will NOT save results!!!\n\n')
-        break
+if options.overwrite == 0
+    % Would the user like to overwrite files?
+    loaded_overwrite_opt = ...
+        input(['\n\nWARNING: You have loaded this data.',...
+        '\nShould scripts overwrite saved results? \n0 = no \n1 = yes \n\n']);
+    % Force user to choose: OVERWRITE or not.
+    while(1)
+        if loaded_overwrite_opt == 1
+            saveit = 1; %Save and OVERWRITE
+            fprintf('\nScripts will OVERWRITE saved results!!!\n\n')
+            break
+        elseif loaded_overwrite_opt == 0
+            saveit = 0; %Don't save and don't overwrite.
+            fprintf('\nScripts will NOT save results!!!\n\n')
+            break
+        end
     end
+elseif options.overwrite == 1
+    % Overwrite, but don't ask!!
+    saveit = 1;
+    fprintf('\nScripts will OVERWRITE saved results!!!\n\n')
 end
 
 

@@ -1,4 +1,7 @@
 %% Self Coupled, Zero Feedback Phase Offset Tree Creator
+% Run only the first section to create the directory structure. The second
+% section does actual calculations.
+%
 % We begin by creating a tree structure. This structure organizes our saved
 % data and our thinking about the bifurcations.
 %
@@ -42,7 +45,7 @@
 %   |   |   -...
 %   |   -...
 
-%% System Parameters
+% System Parameters
 % Feedback Parameters
 feedPhaseMat = [1, 0; 0, 1];
 feedAmpMat = [1, 0; 0, 1];
@@ -55,8 +58,11 @@ J = 560e-6;
 alphas = [0, 3];
 
 % directory creation
-datadir = '/home/bkmiller/qd-micropillar-laser-project/data_bimodal-qd-micropillars/';
+base_dir = '/home/bkmiller/qd-micropillar-laser-project/';
+datadir = strcat(base_dir,'data_bimodal-qd-micropillars/');
 trunkdir = strcat(datadir,'zeroPhaseOffsetJ=',num2str(J*1e6),'uA/');
+weakDirList = cell(0);
+strongDirList = cell(0);
 
 mkdir(trunkdir);
 
@@ -65,6 +71,7 @@ for i = 1:numel(alphas)
     mkdir(weakdir)
     for j = 1:numel(tau_fbArray)
         tempdir = strcat(weakdir,'tau_fb=',num2str(tau_fbArray(j)),'ns/');
+        weakDirList{end+1} = tempdir;
         
         setup_params_nonDim_CnstCplRatio(...
             'save',1, ...
@@ -84,6 +91,7 @@ for i = 1:numel(alphas)
     mkdir(strongdir)
     for j = 1:numel(tau_fbArray)
         tempdir = strcat(strongdir,'tau_fb=',num2str(tau_fbArray(j)),'ns/');
+        strongDirList{end+1} = tempdir;
         
         setup_params_nonDim_CnstCplRatio(...
             'save',1, ...
@@ -100,4 +108,110 @@ for i = 1:numel(alphas)
     end
 end
 
+% Save dirList
+save(strcat(trunkdir,'weakDirList.mat'),'weakDirList')
+save(strcat(trunkdir,'strongDirList.mat'),'strongDirList')
 
+%% Calculate initial steady state branch and bifurcations.
+
+% FIND AND OPEN weakDirList.mat and strongDirList.mat
+
+for i = 1:numel(weakDirList)
+    loader('datadir_specific',weakDirList{i}, 'overwrite',1)
+    
+    % Time series
+    dde23_soln = solver([1e-9;0;1e-9;0;0;0], ...
+        [0,10], ...
+        param, ...
+        master_options);
+    % Check time series for weakDom
+    if norm([dde23_soln.y(:,1),dde23_soln.y(:,2)]) ...
+            > norm([dde23_soln.y(:,3),dde23_soln.y(:,4)])
+        % strong is dom over weak
+        error(['Strong field is dom over weak. ind_weakDirList=',num2str(i)])
+    end
+    
+    [branch_stst, nunst_branch_stst, ind_fold, ind_hopf] = ... 
+        init_branch(funcs, ...
+        dde23_soln.y(:,end), param.feed_phase.index, 400, param, ...
+        'max_step',[param.feed_phase.index, (1)*pi/32], ...
+        'minimal_real_part', -0.5, ...
+        master_options);
+    
+    % Fold
+    fold_branches = struct;
+    for i = 1:length(ind_fold)
+        fold_active_branch_name = ...
+            strcat('f',num2str(i),'branch');
+
+        try
+            fbranch = ...
+                bifurContin_FoldHopf( ...
+                funcs, ... 
+                branch_stst, ...
+                ind_fold(i), ...
+                [param.feed_phase.index, param.feed_ampli.index], ...
+                20, ...
+                param,...
+                'plot_prog', 1, ...
+                master_options,...
+                'save',0);
+
+            fold_branches.(fold_active_branch_name) = fbranch;
+        catch ME
+            switch ME.identifier
+                case 'br_contn:start'
+                    warning(ME.message);
+                    warning(strcat('During branch=',fold_active_branch_name));
+                    fold_branches.(fold_active_branch_name).error = ME;
+                    fold_branches.(fold_active_branch_name).fold_active_ind = ...
+                        i;
+                    fold_branches.(fold_active_branch_name).fold_active_branch_name = ...
+                        fold_active_branch_name;
+                otherwise
+                    rethrow(ME)
+            end
+        end
+    end
+    
+    % Hopf
+    hopf_branches = struct;
+    for i = 1:length(ind_hopf)
+        hopf_active_branch_name = ...
+            strcat('h',num2str(i),'branch');
+
+        try
+            hbranch = ...
+                bifurContin_FoldHopf( ...
+                funcs, ... 
+                branch_stst, ...
+                ind_hopf(i), ...
+                [param.feed_phase.index, param.feed_ampli.index], ...
+                20, ...
+                param,...
+                'plot_prog', 1, ...
+                master_options,...
+                'save',0);
+
+            hopf_branches.(hopf_active_branch_name) = hbranch;
+        catch ME
+            switch ME.identifier
+                case 'br_contn:start'
+                    warning(ME.message);
+                    warning(strcat('During branch=',hopf_active_branch_name));
+                    hopf_branches.(hopf_active_branch_name).error = ME;
+                    hopf_branches.(hopf_active_branch_name).hopf_active_ind = ...
+                        i;
+                    hopf_branches.(hopf_active_branch_name).hopf_active_branch_name = ...
+                        hopf_active_branch_name;
+                otherwise
+                    rethrow(ME)
+            end
+        end
+    end
+    
+    % Save hopf and fold branches
+    save([master_options.datadir_specific,'hopf_branches'],'hopf_branches')
+    save([master_options.datadir_specific,'fold_branches'],'fold_branches')
+    
+end
