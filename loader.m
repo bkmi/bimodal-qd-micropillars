@@ -32,6 +32,15 @@ parse(p,varargin{:})
 % Make final options
 options = p.Results;
 
+% Add trailing / to datadir_specific and  datadir_parent
+if options.datadir_specific(end) ~= '/'
+    options.datadir_specific(end+1) = '/';
+end
+
+if options.datadir_parent(end) ~= '/'
+    options.datadir_parent(end+1) = '/';
+end
+
 
 % Organize behavior from options
 % Check for datadir_parent
