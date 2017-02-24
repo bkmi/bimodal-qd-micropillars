@@ -27,6 +27,12 @@ function [ soln, figFirst, figLast ] = sweeper( ind_parSweep, parBound, param, v
 %           Maximum difference between the variable values at each step
 %           back when checking for oscillations. Larger values are less
 %           sensitive to oscillation.
+%       'save_name' = 'dde23_soln_name'
+%           The solver will save the dde23_soln as 'dde23_soln_name' in 
+%           a datadir_specific given by master_options. It will overwrite.
+%       'quiet' = 0, 1
+%           0 -> usual output.
+%           1 -> no disp output.
 %
 %   master_options:
 %       'save' = 0, 1
@@ -51,6 +57,8 @@ p.addParameter('durTimeSeries', 10)
 p.addParameter('oscStepsCheck', 10)
 p.addParameter('oscTol', 1e-6)
 p.addParameter('numSweepSteps', 50)
+p.addParameter('save_name', 'dde23_soln')
+p.addParameter('quiet', 1)
 
 
 % Master option defaults
@@ -97,8 +105,8 @@ tic; % Start timer
     [0,1.5*options.durTimeSeries], ...
     soln(1).param, ...
     'plot',options.plot, ...
-    'quiet', 1);
-% 'dde23_options',ddeset('RelTol',10^-8,'OutputFcn', @odeplot)
+    'quiet', options.quiet);
+% ,'dde23_options',ddeset('RelTol',10^-8,'OutputFcn', @odeplot));
 
 soln(1).calcTime = toc; % Stop Timer
 
@@ -139,3 +147,31 @@ for i = 2:options.numSweepSteps
     soln(i).calcTime = toc; % Stop Timer
 end
 
+
+%% Save
+% Save, if necessary
+datadir_specific = options.datadir_specific;
+
+% Where will it save?
+if options.quiet == 0;
+    if options.save == 1
+        fprintf(strcat('\n\n Saving in subfolder:\n', datadir_specific,'\n'))
+    end
+end
+    
+dde23_soln = soln(end).timeSeries;
+sweepSoln = soln;
+
+if options.save == 1 && ...
+        ~exist(strcat(datadir_specific,options.save_name,'.mat'),'file')
+    save(strcat(datadir_specific,options.save_name), ...
+        'dde23_soln', 'sweepSoln')
+elseif options.save == 1 && ...
+        exist(strcat(datadir_specific,options.save_name,'.mat'),'file')
+    warning('That file %s already exists. Overwriting.', ...
+        strcat(datadir_specific,options.save_name) )
+    save(strcat(datadir_specific,options.save_name), ...
+        'dde23_soln', 'sweepSoln')
+end
+
+end

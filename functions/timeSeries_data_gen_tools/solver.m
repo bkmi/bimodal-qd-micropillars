@@ -178,6 +178,8 @@ if options.plot == 1
     figHandle = plot_solver( dde23_soln, par(param.J.index), ...
         hist, ...
         dde23_time_units, dde23_ef_units, dde23_n_units );
+else
+    figHandle = 0;
 end
 
 %% Save
