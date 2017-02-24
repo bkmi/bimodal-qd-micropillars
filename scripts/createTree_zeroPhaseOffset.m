@@ -55,7 +55,7 @@ tau_fbArray = [0.83, 1.5, 2.93, 5.60, 9.33];
 
 % Laser Parameters
 J = 560e-6;
-alphas = [0, 3];
+alphas = 0;
 
 % directory creation
 base_dir = '/home/bkmiller/qd-micropillar-laser-project/';
@@ -119,99 +119,38 @@ save(strcat(trunkdir,'strongDirList.mat'),'strongDirList')
 for i = 1:numel(weakDirList)
     loader('datadir_specific',weakDirList{i}, 'overwrite',1)
     
-    % Time series
+     % Time series
     dde23_soln = solver([1e-9;0;1e-9;0;0;0], ...
         [0,10], ...
         param, ...
         master_options);
     % Check time series for weakDom
-    if norm([dde23_soln.y(:,1),dde23_soln.y(:,2)]) ...
-            > norm([dde23_soln.y(:,3),dde23_soln.y(:,4)])
+    if norm([dde23_soln.y(1,end),dde23_soln.y(2,end)]) ...
+            > norm([dde23_soln.y(3,end),dde23_soln.y(4,end)])
         % strong is dom over weak
-        error(['Strong field is dom over weak. ind_weakDirList=',num2str(i)])
+        error('Strong field is dom over weak.')
     end
     
-    [branch_stst, nunst_branch_stst, ind_fold, ind_hopf] = ... 
-        init_branch(funcs, ...
-        dde23_soln.y(:,end), param.feed_phase.index, 400, param, ...
-        'max_step',[param.feed_phase.index, (1)*pi/32], ...
-        'minimal_real_part', -0.5, ...
-        master_options);
+    bifurcation_sketch(funcs, dde23_soln, param, master_options);
     
-    % Fold
-    fold_branches = struct;
-    for i = 1:length(ind_fold)
-        fold_active_branch_name = ...
-            strcat('f',num2str(i),'branch');
+end
 
-        try
-            fbranch = ...
-                bifurContin_FoldHopf( ...
-                funcs, ... 
-                branch_stst, ...
-                ind_fold(i), ...
-                [param.feed_phase.index, param.feed_ampli.index], ...
-                20, ...
-                param,...
-                'plot_prog', 1, ...
-                master_options,...
-                'save',0);
 
-            fold_branches.(fold_active_branch_name) = fbranch;
-        catch ME
-            switch ME.identifier
-                case 'br_contn:start'
-                    warning(ME.message);
-                    warning(strcat('During branch=',fold_active_branch_name));
-                    fold_branches.(fold_active_branch_name).error = ME;
-                    fold_branches.(fold_active_branch_name).fold_active_ind = ...
-                        i;
-                    fold_branches.(fold_active_branch_name).fold_active_branch_name = ...
-                        fold_active_branch_name;
-                otherwise
-                    rethrow(ME)
-            end
-        end
+%
+for i = 1:numel(strongDirList)
+    loader('datadir_specific',strongDirList{i},'overwrite',1)
+    
+    % Time series
+    sweepSoln = sweeper(param.J.index, [60e-6, param.J.value], param, master_options);
+    dde23_soln = sweepSoln(end).timeSeries;
+
+    % Check time series for strongDom
+    if norm([dde23_soln.y(3,end),dde23_soln.y(4,end)]) ...
+            > norm([dde23_soln.y(1,end),dde23_soln.y(2,end)])
+        % strong is dom over weak
+        error('Strong field is dom over weak.')
     end
     
-    % Hopf
-    hopf_branches = struct;
-    for i = 1:length(ind_hopf)
-        hopf_active_branch_name = ...
-            strcat('h',num2str(i),'branch');
-
-        try
-            hbranch = ...
-                bifurContin_FoldHopf( ...
-                funcs, ... 
-                branch_stst, ...
-                ind_hopf(i), ...
-                [param.feed_phase.index, param.feed_ampli.index], ...
-                20, ...
-                param,...
-                'plot_prog', 1, ...
-                master_options,...
-                'save',0);
-
-            hopf_branches.(hopf_active_branch_name) = hbranch;
-        catch ME
-            switch ME.identifier
-                case 'br_contn:start'
-                    warning(ME.message);
-                    warning(strcat('During branch=',hopf_active_branch_name));
-                    hopf_branches.(hopf_active_branch_name).error = ME;
-                    hopf_branches.(hopf_active_branch_name).hopf_active_ind = ...
-                        i;
-                    hopf_branches.(hopf_active_branch_name).hopf_active_branch_name = ...
-                        hopf_active_branch_name;
-                otherwise
-                    rethrow(ME)
-            end
-        end
-    end
-    
-    % Save hopf and fold branches
-    save([master_options.datadir_specific,'hopf_branches'],'hopf_branches')
-    save([master_options.datadir_specific,'fold_branches'],'fold_branches')
+    bifurcation_sketch(funcs, dde23_soln, param, master_options);
     
 end
