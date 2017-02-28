@@ -1,8 +1,6 @@
 function [  ] = bifurcation_sketch( funcs, dde23_soln, param, master_options )
 %Basic function which does a 'simple_run' at the params
 
-diary(strcat(master_options.datadir_specific,'log'))
-
 try
     [branch_stst, nunst_branch_stst, ind_fold, ind_hopf] = ... 
         init_branch(funcs, ...
@@ -91,7 +89,7 @@ end
 save([master_options.datadir_specific,'hopf_branches'],'hopf_branches')
 save([master_options.datadir_specific,'fold_branches'],'fold_branches')
 
-diary off
+
 
 end
 
