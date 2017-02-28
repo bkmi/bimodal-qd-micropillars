@@ -26,6 +26,7 @@ function [ branch_stst, nunst_branch_stst, ind_fold, ind_hopf ] = ...
 %       'step_bound_opt' = {'step', 0.1, ... 
 %                           'max_step',[ind_contin_param, 0.1], ...
 %                           'newton_max_iterations',10, ...
+%                           'minimal_real_part', -0.5
 %                           'max_bound',[ind_contin_param, 1],...
 %                           'min_bound', [ind_contin_param, -1] };
 %           Calling this will overwrite the default step_bound_opt. You can
@@ -121,7 +122,7 @@ else
     % If the user didn't input step_bound_opt
     % Create defaults for feed_phase
     if ind_contin_param == param.feed_phase.index
-        p.addParameter('step',2*pi/64)
+        p.addParameter('step',pi/64)
         p.addParameter('max_step',[ind_contin_param,2*pi/64])
         p.addParameter('newton_max_iterations',10)
         p.addParameter('max_bound',[ind_contin_param, 30*pi])
