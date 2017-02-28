@@ -1,7 +1,8 @@
 function [ steadyBranches ] = steadyBranchMultiCreator( ...
     funcs, bifparArray, ind_contin_param, branch_length, param, ...
     varargin)
-%Creates multiple stst branches based on a list of input parameters.
+%Creates multiple stst branches based on a list of input parameters:
+%bifparArray.
 %   Input:
 %       funcs, ...
 %       bifparArray, ...
@@ -26,18 +27,7 @@ function [ steadyBranches ] = steadyBranchMultiCreator( ...
 %       'minimal_real_part' = -0.5
 %           For finding eigenvalues.
 %
-%   master_options: SAVING CURRENTLY NOT SUPPORTED.
-%       'save' = 0, 1
-%           By default, this is set to 0. When 'save' = 0, the function
-%           does not try to save anything. When 'save' = 1, the function 
-%           tries to save ________.
-%       'datadir_specific' = '../data_bimodal-qd-micropillars/'
-%           By default, this is set as above.
-%       'dimensional' = 0, 1
-%           By default, this is set to 0. When 'dimensional' = 0, the
-%           function applies a non-dimensionalized system. When
-%           'dimensional' = 1, the function applies a dimensionalized
-%           system.
+
 %% options
 p = inputParser;
 
