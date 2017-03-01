@@ -186,7 +186,6 @@ for i = 1:numel(bifparArray)
     steadyBranches(i).method = steadyBranchSTST.method;
     steadyBranches(i).parameter = steadyBranchSTST.parameter;
     steadyBranches(i).point = steadyBranchSTST.point;
-    steadyBranches(i).param = steadyBranchParam;
     steadyBranches(i).nunst = nunst_steadyBranchSTST;
     steadyBranches(i).indFold = ind_foldSteadyBranchSTST;
     steadyBranches(i).indHopf = ind_hopfSteadyBranchSTST;

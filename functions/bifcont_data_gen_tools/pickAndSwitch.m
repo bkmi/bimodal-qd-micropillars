@@ -114,6 +114,7 @@ param = updateParams(param, 'par_overwrite', branch.point(ptNum).parameter);
 outBranch.nunst = nunstOutBranch;
 outBranch.indFold = indFold;
 outBranch.indHopf = indHopf;
+outBranch.timeDomain = struct;
 
 end
 

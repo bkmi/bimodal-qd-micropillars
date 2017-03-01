@@ -45,6 +45,9 @@ function [ ptBranInd_extrema, figHandle ] = plot_branch( branch, ...
 %       'PlotStyle' = { 'LineStyle', '-', 'Marker', '.' }
 %           Input a cell array which will be passed to the plotter. Usual
 %           plot commands apply.
+%       'polar' = 0, 1
+%           With 1, the value for x turns into phi, the value for y turns
+%           into rho. Polar can only handle options.color = '--r', etc...
 
 %% Defaults + inputParser + Organize behavior
 
@@ -57,6 +60,7 @@ p.addParameter('add_2_gcf', 0)
 p.addParameter('color','b')
 p.addParameter('nunst_color',[])
 p.addParameter('PlotStyle', { 'LineStyle', 'none', 'Marker', '.' })
+p.addParameter('polar',0)
 
 
 % Master option defaults
@@ -146,48 +150,59 @@ ptBranInd_extrema.(param_struct.var_names{options.axes_indParam(2)}).Ind = ...
 %% Plot
 
 
-% Plot points
-if ~any(strcmp('nunst_color',p.UsingDefaults))
+if options.polar ~= 1
+    % For non-polar
     
-    if isa(options.nunst_color,'double')
-        % Behavior based on giving a nunst_branch only
-        nunst_pts = options.nunst_color;
-        max_nunst = max(nunst_pts);
-    elseif isa(options.nunst_color,'cell')
-        % Behavior is based on giving a cell array with nunst_branch and
-        % int_max
-        nunst_pts = options.nunst_color{1};
-        max_nunst = options.nunst_color{2};
+    % Plot points
+    if ~any(strcmp('nunst_color',p.UsingDefaults))
+
+        if isa(options.nunst_color,'double')
+            % Behavior based on giving a nunst_branch only
+            nunst_pts = options.nunst_color;
+            max_nunst = max(nunst_pts);
+        elseif isa(options.nunst_color,'cell')
+            % Behavior is based on giving a cell array with nunst_branch and
+            % int_max
+            nunst_pts = options.nunst_color{1};
+            max_nunst = options.nunst_color{2};
+        end
+
+
+        sel=@(x,i)x(nunst_pts==i);
+        colors = lines(max_nunst+1);
+
+        hold on
+        for i=0:max(nunst_pts)
+            plot(sel(x_param_vals,i),sel(y_param_vals,i), ...
+                'Color',colors(i+1,:), options.PlotStyle{:} );
+        end
+        hold off
+
+        %{
+        for i=unique(nunst_pts)
+            unique_nunst_vals = num2str(i);
+        end
+        %legend(unique_nunst_vals)
+        %}
+
+        colormap(colors)
+        colorbar('YTickLabel','Off')
+        %{
+        colorbar('YTickLabel', ...
+            [{(max_nunst/10)-1}, ...
+            num2cell((max_nunst/10)-1 + max_nunst/10:max_nunst/10:max_nunst+1)])
+        %}
+    else
+        plot(x_param_vals,y_param_vals, ...
+            'Color',options.color, options.PlotStyle{:} );
     end
+elseif options.polar == 1
+    % For polar
     
-    
-    sel=@(x,i)x(nunst_pts==i);
-    colors = lines(max_nunst+1);
-    
-    hold on
-    for i=0:max(nunst_pts)
-        plot(sel(x_param_vals,i),sel(y_param_vals,i), ...
-            'Color',colors(i+1,:), options.PlotStyle{:} );
-    end
-    hold off
-    
-    %{
-    for i=unique(nunst_pts)
-        unique_nunst_vals = num2str(i);
-    end
-    %legend(unique_nunst_vals)
-    %}
-    
-    colormap(colors)
-    colorbar('YTickLabel','Off')
-    %{
-    colorbar('YTickLabel', ...
-        [{(max_nunst/10)-1}, ...
-        num2cell((max_nunst/10)-1 + max_nunst/10:max_nunst/10:max_nunst+1)])
-    %}
+    polar(x_param_vals,y_param_vals, ...
+        options.color );
 else
-    plot(x_param_vals,y_param_vals, ...
-        'Color',options.color, options.PlotStyle{:} );
+    error('Polar == 1 for a polar plot, any other number is non-polar, you picked something else')
 end
 
 
