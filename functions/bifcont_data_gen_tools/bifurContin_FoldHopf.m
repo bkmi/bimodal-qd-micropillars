@@ -1,4 +1,4 @@
-function [ out_branch ] = bifurContin_FoldHopf( ...
+function [ out_branch, varargout ] = bifurContin_FoldHopf( ...
     funcs, ...
     init_branch, ...
     ind_bifurcation, ...
@@ -232,6 +232,11 @@ if strcmp('fold',bifurcation_type)
     out_branch = br_contn(foldfuncs,out_branch,branch_length);
     out_branch = br_rvers(out_branch);
     out_branch = br_contn(foldfuncs,out_branch,branch_length);
+    
+    % Provide foldfuncs if the user gives two outputs AND it's a fold
+    if nargout == 2 
+        varargout{1} = foldfuncs;
+    end
 end
 
 
@@ -248,6 +253,11 @@ if strcmp('hopf',bifurcation_type)
     [out_branch,~,~,~] = br_contn(funcs,out_branch,branch_length);
     out_branch = br_rvers(out_branch);
     out_branch = br_contn(funcs,out_branch,branch_length);
+    
+    % Provide nothing if the user gives two outputs AND it's a hopf
+    if nargout == 2 
+        varargout{1} = @()'hopf';
+    end
 end
 
 
