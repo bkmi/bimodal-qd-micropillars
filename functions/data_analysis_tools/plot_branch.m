@@ -236,6 +236,9 @@ if options.polar ~= 1
         ylabel([param.plot_names(param.omega2.index), ...
             param.units(param.omega2.index)])
     
+        colormap(colors)
+        colorbar('YTickLabel','Off')
+        
     elseif ~any(strcmp('nunst_color',p.UsingDefaults))
 
         if isa(options.nunst_color,'double')
