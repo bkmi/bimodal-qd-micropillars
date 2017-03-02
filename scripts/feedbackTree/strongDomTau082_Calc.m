@@ -2,8 +2,6 @@
 treeLoader('datadir_specific', ...
     '/home/bkmiller/qd-micropillar-laser-project/data_bimodal-qd-micropillars/zeroPhaseOffsetJ=560uA/strongDomAlpha=0/tau_fb=0.83ns/');
 
-% CHECK OUT THIS FB VALUE:
-% 
 
 %% more stst sweeps
 stdyBrnchFB_regSpace = steadyBranchMultiCreator( ...
@@ -73,103 +71,12 @@ hopfTestNear0389 = bifurFoldHopfMultiCreator( ...
     funcs, stdyBrnchFB_interesting(5), param, stdyBrnchFB_interesting(5).indHopf, 20);
 
 
-
-%% Branch plot
-
-% branchplot = figure;
-% 
-% % Plot each testHopf
-% for i = 1:numel(hopfTest)
-%     % Add each hopf_branch
-%     if isa(hopfTest(i).error,'double') && hopfTest(i).error == 0
-%         % Only plot hopf_branches that DO NOT have errors
-%         plot_branch(hopfTest(i), param, ...
-%             'add_2_gcf', 1, 'color','c');
-%     end
-% end
-% 
-% % Plot each testHopf
-% for i = 1:numel(hopfTest2)
-%     % Add each hopf_branch
-%     if isa(hopfTest2(i).error,'double') && hopfTest2(i).error == 0
-%         % Only plot hopf_branches that DO NOT have errors
-%         plot_branch(hopfTest2(i), param, ...
-%             'add_2_gcf', 1, 'color','c');
-%     end
-% end
-% 
-% 
-% % Plot each testFold
-% for i = 1:numel(foldTest)
-%     % Add each fold
-%     if isa(foldTest(i).error,'double') && foldTest(i).error == 0
-%         plot_branch(foldTest(i), param, ...
-%             'add_2_gcf', 1, 'color','r');
-%     end
-% end
-% 
-% 
-% % Plot stst branches
-% for i = 1:numel(stdyBrnchFB_regSpace)
-%     
-%     plot_branch(stdyBrnchFB_regSpace(i), param, ...
-%                 'add_2_gcf', 1, 'color','g', ...
-%                 'axes_indParam',[param.feed_phase.index,param.feed_ampli.index]);
-% end
-
-
-
-
-
-
-% branchplot = polar([0],[0]);
-% 
-% % Plot each testHopf
-% for i = 1:numel(hopfTest)
-%     % Add each hopf_branch
-%     if isa(hopfTest(i).error,'double') && hopfTest(i).error == 0
-%         % Only plot hopf_branches that DO NOT have errors
-%         plot_branch(hopfTest(i), param, ...
-%             'add_2_gcf', 1, 'color','c','polar',1);
-%     end
-% end
-% 
-% % Plot each testHopf
-% for i = 1:numel(hopfTest2)
-%     % Add each hopf_branch
-%     if isa(hopfTest2(i).error,'double') && hopfTest2(i).error == 0
-%         % Only plot hopf_branches that DO NOT have errors
-%         plot_branch(hopfTest2(i), param, ...
-%             'add_2_gcf', 1, 'color','c','polar',1);
-%     end
-% end
-% 
-% 
-% % Plot each testFold
-% for i = 1:numel(foldTest)
-%     % Add each fold
-%     if isa(foldTest(i).error,'double') && foldTest(i).error == 0
-%         plot_branch(foldTest(i), param, ...
-%             'add_2_gcf', 1, 'color','r','polar',1);
-%     end
-% end
-% 
-% 
-% % Plot stst branches
-% for i = 1:numel(stdyBrnchFB)
-%     
-%     plot_branch(stdyBrnchFB(i), param, ...
-%                 'add_2_gcf', 1, 'color','.g', ...
-%                 'axes_indParam',[param.feed_phase.index,param.feed_ampli.index], ...
-%                 'polar',1);
-% end
-
-
-
-
-
-
-
+% save([master_options.datadir_specific,'stdyBrnchFB_regSpace.mat'],'stdyBrnchFB_regSpace')
+% save([master_options.datadir_specific,'stdyBrnchFB_interesting.mat'],'stdyBrnchFB_interesting')
+% save([master_options.datadir_specific,'foldNear0133.mat'],'foldNear0133')
+% save([master_options.datadir_specific,'hopfTestNear025.mat'],'hopfTestNear025')
+% save([master_options.datadir_specific,'hopfTestNear0311.mat'],'hopfTestNear0311')
+% save([master_options.datadir_specific,'hopfTestNear0389.mat'],'hopfTestNear0389')
 
 
 %% Add the tested bifurcations to the total list
@@ -182,15 +89,87 @@ hopfTestNear0389 = bifurFoldHopfMultiCreator( ...
 
 %% feed amp dir
 
-stdyBranch_alongFB0_FA = pickAndSwitch(funcs, ...
-    stdyBrnchFB_regSpace(1), ...
-    param.feed_ampli.index, ...
-    250, ...
-    param, ...
-    'fig', branchplot, ...
-    'axes_indParam', [param.feed_phase.index, param.feed_ampli.index], ...
-    'reverse',1);
+% stdyBranch_alongFB0_FA = pickAndSwitch(funcs, ...
+%     stdyBrnchFB_regSpace(1), ...
+%     param.feed_ampli.index, ...
+%     250, ...
+%     param, ...
+%     'fig', branchplot, ...
+%     'axes_indParam', [param.feed_phase.index, param.feed_ampli.index], ...
+%     'reverse',1);
 
+numVert = 15;
+
+stdyBrnchFA_fromReg1 = struct( ...
+    'method', struct, ...
+    'parameter', struct, ...
+    'point', struct, ...
+    'nunst', 0, ...
+    'indFold', 0106, ...
+    'indHopf', 0, ...
+    'timeDomain', struct);
+stdyBrnchFA_fromReg1 = repmat(stdyBrnchFA_fromReg1, numVert);
+pointsToContinueFrom = round(linspace(20,numel(stdyBrnchFB_regSpace(1).point)-20,15));
+
+for i = 1:numel(pointsToContinueFrom)
+    stdyBrnchFA_fromReg1(i) = pickAndSwitch(funcs, ...
+        stdyBrnchFB_regSpace(1), ...
+        param.feed_ampli.index, ...
+        250, ...
+        param, ...
+        'reverse',1 , ...
+        'point', pointsToContinueFrom(i));
+end
+
+% save([master_options.datadir_specific,'stdyBrnchFA_fromReg1.mat'],'stdyBrnchFA_fromReg1')
+% longMid = stdyBrnchFA_fromReg1(8)
+% longMid.parameter.min_bound = []
+% longMid.parameter.max_bound = []
+% longMid = br_contn(funcs, longMid, 125)
+% longMid = br_rvers(longMid)
+% longMid = br_contn(funcs, longMid, 125)
+% longMid.nunst = GetRotStability(longMid, funcs, 2)
+% save([master_options.datadir_specific,'longMid.mat'],'longMid')
+
+
+%% find nunst 2 in fa
+
+for i = 1:numel(stdyBrnchFA_fromReg1)
+    if any(stdyBrnchFA_fromReg1(i).nunst == 2)
+        plot_branch(stdyBrnchFA_fromReg1(i), param, ...
+            'twoOmegaNunst', stdyBrnchFA_fromReg1(i).nunst)
+    end
+end
+
+%% Curve fold on right side
+
+curveFold = bifurFoldHopfMultiCreator( ...
+    funcs, stdyBrnchFA_fromReg1(5), param, stdyBrnchFA_fromReg1(5).indFold(2), 40);
+save([master_options.datadir_specific,'curveFold.mat'],'curveFold')
+
+%% Let's go close to it in feed_phase
+
+disp(stdyBrnchFA_fromReg1(5).indFold(2))
+% higher pt is more stable. <=43 == 3 nunst, >=44 = 2 nunst 
+
+phaseTest3nunst = pickAndSwitch(funcs, ...
+    stdyBrnchFA_fromReg1(5), ...
+    param.feed_phase.index, ...
+    100, ...
+    param, ...
+    'reverse',1, ...
+    'nunst_color',stdyBrnchFA_fromReg1(5).nunst , ...
+    'point', 39); % finds some unstable hopf bifurcations, useless fold
+
+% ALREADY HAVE THESE
+% phaseTest2nunst = pickAndSwitch(funcs, ...
+%     stdyBrnchFA_fromReg1(5), ...
+%     param.feed_phase.index, ...
+%     100, ...
+%     param, ...
+%     'reverse',1, ...
+%     'nunst_color',stdyBrnchFA_fromReg1(5).nunst, ...
+%     'point', 48);  % finds two fold bifurcations
 
 %% SAVE
 
