@@ -142,7 +142,7 @@ options = p.Results;
 %% setup
 
 steadyBranches = struct('method',struct,'parameter',struct,'point',struct, ...
-    'param', struct, 'nunst', 0, 'indFold', 0, 'indHopf', 0, 'timeDomain', struct);
+    'nunst', 0, 'indFold', 0, 'indHopf', 0, 'timeDomain', struct);
 steadyBranches = repmat(steadyBranches, [numel(bifparArray), 1]);
 
 

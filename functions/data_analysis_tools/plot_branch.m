@@ -1,5 +1,5 @@
 function [ ptBranInd_extrema, figHandle ] = plot_branch( branch, ...
-    param_struct, ...
+    param, ...
     varargin )
 %Plot a branch (by default) along its two free continuation parameters.
 %   Considering we are using rotational symmetry stst will also work since
@@ -61,6 +61,7 @@ p.addParameter('color','b')
 p.addParameter('nunst_color',[])
 p.addParameter('PlotStyle', { 'LineStyle', 'none', 'Marker', '.' })
 p.addParameter('polar',0)
+p.addParameter('twoOmegaNunst',0)
 
 
 % Master option defaults
@@ -85,6 +86,10 @@ if options.add_2_gcf==1
 elseif options.add_2_gcf==0
     % Default or user called add_2_gcf
     figHandle = figure;
+    set(figHandle,'PaperType','a4')
+    set(figHandle,'PaperOrientation','landscape');
+    set(figHandle,'PaperUnits','normalized');
+    set(figHandle,'PaperPosition', [0 0 1 1]);
     clf;
 elseif isa(options.add_2_gcf,'struct')
     % This part is where we parse the object handle
@@ -120,30 +125,41 @@ end
 
 %% Extrema
 
-
-% Prepare figure and vals
-x_param_vals = arrayfun(@(p)p.parameter(options.axes_indParam(1)), ... 
-    branch.point); %Get fold continued parameter values for xdir
-y_param_vals = arrayfun(@(p)p.parameter(options.axes_indParam(2)), ...
-    branch.point); %Get fold continued parameter values for ydir
+if ~any(strcmp('twoOmegaNunst',p.UsingDefaults))
+    % Prepare figure and vals
+    x_param_vals = arrayfun(@(p)p.parameter(options.axes_indParam(1)), ... 
+        branch.point); %Get fold continued parameter values for xdir
+    y_param_vals1 = arrayfun(@(p)p.parameter(param.omega1.index), ...
+        branch.point); %Get fold continued parameter values for ydir
+    y_param_vals2 = arrayfun(@(p)p.parameter(param.omega2.index), ...
+        branch.point); %Get fold continued parameter values for ydir
+    
+    y_param_vals = y_param_vals1;
+else
+    % Prepare figure and vals
+    x_param_vals = arrayfun(@(p)p.parameter(options.axes_indParam(1)), ... 
+        branch.point); %Get fold continued parameter values for xdir
+    y_param_vals = arrayfun(@(p)p.parameter(options.axes_indParam(2)), ...
+        branch.point); %Get fold continued parameter values for ydir
+end
 
 % Report extrema
 ptBranInd_extrema = struct;
-ptBranInd_extrema.(param_struct.var_names{options.axes_indParam(1)}) = struct;
-ptBranInd_extrema.(param_struct.var_names{options.axes_indParam(2)}) = struct;
+ptBranInd_extrema.(param.var_names{options.axes_indParam(1)}) = struct;
+ptBranInd_extrema.(param.var_names{options.axes_indParam(2)}) = struct;
 % x-dir
 [max_val_x, max_ind_x] = max(x_param_vals);
 [min_val_x, min_ind_x] = min(x_param_vals);
-ptBranInd_extrema.(param_struct.var_names{options.axes_indParam(1)}).Val = ... 
+ptBranInd_extrema.(param.var_names{options.axes_indParam(1)}).Val = ... 
     [min_val_x, max_val_x];
-ptBranInd_extrema.(param_struct.var_names{options.axes_indParam(1)}).Ind = ... 
+ptBranInd_extrema.(param.var_names{options.axes_indParam(1)}).Ind = ... 
     [min_ind_x, max_ind_x];
 % y-dir
 [max_val_y, max_ind_y] = max(y_param_vals);
 [min_val_y, min_ind_y] = min(y_param_vals);
-ptBranInd_extrema.(param_struct.var_names{options.axes_indParam(2)}).Val = ... 
+ptBranInd_extrema.(param.var_names{options.axes_indParam(2)}).Val = ... 
     [min_val_y, max_val_y];
-ptBranInd_extrema.(param_struct.var_names{options.axes_indParam(2)}).Ind = ... 
+ptBranInd_extrema.(param.var_names{options.axes_indParam(2)}).Ind = ... 
     [min_ind_y, max_ind_y];
 
 
@@ -154,7 +170,73 @@ if options.polar ~= 1
     % For non-polar
     
     % Plot points
-    if ~any(strcmp('nunst_color',p.UsingDefaults))
+    if ~any(strcmp('twoOmegaNunst',p.UsingDefaults))
+        
+        % top plot, omega1
+        subplot(1,2,1)
+        if isa(options.twoOmegaNunst,'double')
+            % Behavior based on giving a nunst_branch only
+            nunst_pts = options.twoOmegaNunst;
+            max_nunst = max(nunst_pts);
+        elseif isa(options.twoOmegaNunst,'cell')
+            % Behavior is based on giving a cell array with nunst_branch and
+            % int_max
+            nunst_pts = options.twoOmegaNunst{1};
+            max_nunst = options.twoOmegaNunst{2};
+        end
+        
+        sel=@(x,i)x(nunst_pts==i);
+        colors = lines(max_nunst+1);
+
+        hold on
+        for i=0:max(nunst_pts)
+            plot(sel(x_param_vals,i),sel(y_param_vals1,i), ...
+                'Color',colors(i+1,:), options.PlotStyle{:} );
+        end
+        hold off
+        
+        % Add title, axes
+        title(strcat(param.plot_names(param.omega1.index), ...
+            '-vs-', param.plot_names(options.axes_indParam(1)), ...
+                  ' - Bifurcation Continuation'))
+        xlabel([param.plot_names(options.axes_indParam(1)), ... 
+            param.units(options.axes_indParam(1))])
+        ylabel([param.plot_names(param.omega1.index), ...
+            param.units(param.omega1.index)])
+        
+        %bottom plot, omega2
+        subplot(1,2,2)
+        if isa(options.twoOmegaNunst,'double')
+            % Behavior based on giving a nunst_branch only
+            nunst_pts = options.twoOmegaNunst;
+            max_nunst = max(nunst_pts);
+        elseif isa(options.twoOmegaNunst,'cell')
+            % Behavior is based on giving a cell array with nunst_branch and
+            % int_max
+            nunst_pts = options.twoOmegaNunst{1};
+            max_nunst = options.twoOmegaNunst{2};
+        end
+        
+        sel=@(x,i)x(nunst_pts==i);
+        colors = lines(max_nunst+1);
+
+        hold on
+        for i=0:max(nunst_pts)
+            plot(sel(x_param_vals,i),sel(y_param_vals2,i), ...
+                'Color',colors(i+1,:), options.PlotStyle{:} );
+        end
+        hold off
+        
+        % Add title, axes
+        title(strcat(param.plot_names(param.omega2.index), ...
+            '-vs-', param.plot_names(options.axes_indParam(1)), ...
+                  ' - Bifurcation Continuation'))
+        xlabel([param.plot_names(options.axes_indParam(1)), ... 
+            param.units(options.axes_indParam(1))])
+        ylabel([param.plot_names(param.omega2.index), ...
+            param.units(param.omega2.index)])
+    
+    elseif ~any(strcmp('nunst_color',p.UsingDefaults))
 
         if isa(options.nunst_color,'double')
             % Behavior based on giving a nunst_branch only
@@ -205,15 +287,18 @@ else
     error('Polar == 1 for a polar plot, any other number is non-polar, you picked something else')
 end
 
-
-% Add title, axes
-title(strcat(param_struct.plot_names(options.axes_indParam(2)), ...
-    '-vs-', param_struct.plot_names(options.axes_indParam(1)), ...
-	      ' - Bifurcation Continuation'))
-xlabel([param_struct.plot_names(options.axes_indParam(1)), ... 
-    param_struct.units(options.axes_indParam(1))])
-ylabel([param_struct.plot_names(options.axes_indParam(2)), ...
-    param_struct.units(options.axes_indParam(2))])
+if any(strcmp('twoOmegaNunst',p.UsingDefaults))
+    % WHEN twoOmegaNunst is NOT SELECTED
+    
+    % Add title, axes
+    title(strcat(param.plot_names(options.axes_indParam(2)), ...
+        '-vs-', param.plot_names(options.axes_indParam(1)), ...
+              ' - Bifurcation Continuation'))
+    xlabel([param.plot_names(options.axes_indParam(1)), ... 
+        param.units(options.axes_indParam(1))])
+    ylabel([param.plot_names(options.axes_indParam(2)), ...
+        param.units(options.axes_indParam(2))])
+end
 
 
 % Return hold to what it was before running this function.

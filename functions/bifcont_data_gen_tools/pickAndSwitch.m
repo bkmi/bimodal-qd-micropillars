@@ -10,6 +10,9 @@ function [ outBranch ] = pickAndSwitch( ...
 %       param
 %
 %   Options:
+%       'point'
+%           Chose this option to avoid picking a point with the gui.
+%           Instead it just uses this point number.
 %       'fig' = fig_number
 %           locate_along_branch will add/move the marker on the figure
 %           given by fig_number.
@@ -36,15 +39,15 @@ function [ outBranch ] = pickAndSwitch( ...
 %           single parameter. If you call a cell array then that cell array
 %           takes priority.
 %
-%       'par_overwrite' = branch.point(1).parameter OR param.values
-%           Calling this flag overrides the values given in the
-%           param_struct. This is particularly useful if you would like to
-%           make a new branch starting at a point along a DDEBIF
-%           bifurcation continuation.
-%
-%           THE ORDER/INDICES DETERMINED IN param_struct MUST BE THE SAME 
-%           AS IN YOUR 'par_overwrite' VALUES OR THERE WILL BE MASSIVE 
-%           ERROR.
+% %       'par_overwrite' = branch.point(1).parameter OR param.values
+% %           Calling this flag overrides the values given in the
+% %           param_struct. This is particularly useful if you would like to
+% %           make a new branch starting at a point along a DDEBIF
+% %           bifurcation continuation.
+% % 
+% %           THE ORDER/INDICES DETERMINED IN param_struct MUST BE THE SAME 
+% %           AS IN YOUR 'par_overwrite' VALUES OR THERE WILL BE MASSIVE 
+% %           ERROR.
 %
 %       'reverse' = 0, 1
 %           Default to 0. 0 means the continuation will not reverse. 1
@@ -70,6 +73,7 @@ p.KeepUnmatched = true;
 p.addParameter('fig',gcf)
 p.addParameter('axes_indParam',[0,0])
 p.addParameter('nunst_color',0)
+p.addParameter('point', 0)
 
 % Make options
 parse(p,varargin{:})
@@ -96,12 +100,17 @@ end
 
 
 %% pick
-[ptNum, ~] = locate_along_branch( branch, param, locateOpts );
+if any(strcmp('point',p.UsingDefaults))
+    % when point IS default
+    [ptNum, ~] = locate_along_branch( branch, param, locateOpts );
+else
+    ptNum = options.point;
+end
 
 
 %% switch
 
-param = updateParams(param, 'par_overwrite', branch.point(ptNum).parameter);
+% param = updateParams(param, 'par_overwrite', branch.point(ptNum).parameter);
 
 [outBranch, nunstOutBranch, indFold, indHopf] = init_branch( funcs, ...
     branch.point(ptNum).x, ...
@@ -109,7 +118,8 @@ param = updateParams(param, 'par_overwrite', branch.point(ptNum).parameter);
     branch_length, ...
     param, ...
     p.Unmatched, ...
-    'save', 0);
+    'save', 0, ...
+    'par_overwrite', branch.point(ptNum).parameter);
 
 outBranch.nunst = nunstOutBranch;
 outBranch.indFold = indFold;
