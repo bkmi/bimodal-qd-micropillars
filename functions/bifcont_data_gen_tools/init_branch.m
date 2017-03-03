@@ -28,7 +28,9 @@ function [ branch_stst, nunst_branch_stst, ind_fold, ind_hopf ] = ...
 %                           'newton_max_iterations',10, ...
 %                           'minimal_real_part', -0.5
 %                           'max_bound',[ind_contin_param, 1],...
-%                           'min_bound', [ind_contin_param, -1] };
+%                           'min_bound', [ind_contin_param, -1], ... 
+%                           'halting_accuracy', 1e-10, ...
+%                           'minimal_accuracy', 1e-8 };
 %           Calling this will overwrite the default step_bound_opt. You can
 %           also call each of these parameters by name to overwrite a
 %           single parameter. If you call a cell array then that cell array
@@ -64,9 +66,7 @@ function [ branch_stst, nunst_branch_stst, ind_fold, ind_hopf ] = ...
 %
 %       'opt_inputs' = { 'extra_condition', [1], ...
 %                        'print_residual_info',[0] }
-%           By default, opt_inputs is set as above. YOU CANNOT CALL IT, I
-%           was too lazy to write this. It can easily be written in if you
-%           ever need to change it, but I have never needed to change it.
+%           By default, opt_inputs is set as above.
 %
 %   master_options:
 %       'save' = 0, 1
@@ -127,6 +127,8 @@ else
         p.addParameter('newton_max_iterations',10)
         p.addParameter('max_bound',[ind_contin_param, 30*pi])
         p.addParameter('min_bound',[ind_contin_param, -30*pi])
+        p.addParameter('halting_accuracy',1e-10)
+        p.addParameter('minimal_accuracy',1e-8)
         
         %{
         step_bound_opt_PHASE = { 'step',2*pi/64,...
@@ -141,6 +143,8 @@ else
         p.addParameter('newton_max_iterations',10)
         p.addParameter('max_bound',[ind_contin_param,0.9999])
         p.addParameter('min_bound', [ind_contin_param,0.001])
+        p.addParameter('halting_accuracy',1e-10)
+        p.addParameter('minimal_accuracy',1e-8)
 
         %{
         step_bound_opt_AMP = { 'step',0.003,'max_step',[ind_feed_ampli,0.003], ...
@@ -159,6 +163,8 @@ else
             [ind_contin_param,2.0*par(ind_contin_param)])
         p.addParameter('min_bound',...
             [ind_contin_param,-2.0*par(ind_contin_param)])
+        p.addParameter('halting_accuracy',1e-10)
+        p.addParameter('minimal_accuracy',1e-8)
 
     end
 
@@ -193,6 +199,16 @@ else
     if any(strcmp('min_bound',fieldnames(p.Results)))
         step_bound_flags{end+1} = 'min_bound';
         step_bound_vals{end+1} = p.Results.min_bound;
+    end
+    
+    if any(strcmp('halting_accuracy',fieldnames(p.Results)))
+        step_bound_flags{end+1} = 'halting_accuracy';
+        step_bound_vals{end+1} = p.Results.halting_accuracy;
+    end
+    
+    if any(strcmp('minimal_accuracy',fieldnames(p.Results)))
+        step_bound_flags{end+1} = 'minimal_accuracy';
+        step_bound_vals{end+1} = p.Results.minimal_accuracy;
     end
     
     % Zip like python
