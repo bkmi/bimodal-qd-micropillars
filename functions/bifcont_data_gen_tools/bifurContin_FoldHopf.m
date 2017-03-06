@@ -30,7 +30,9 @@ function [ out_branch, varargout ] = bifurContin_FoldHopf( ...
 %                           ind_contin_param(2),10]
 %                           'min_bound',...
 %                           [ind_contin_param(1),-10, ...
-%                           ind_contin_param(2),-10]
+%                           ind_contin_param(2),-10], ...
+%                           'halting_accuracy', 1e-11, ...
+%                           'minimal_accuracy', 1e-9 }
 %           Calling this will overwrite the default step_bound_opt. You can
 %           also call each of these parameters by name to overwrite a
 %           single parameter. If you call a cell array then that cell array
@@ -99,17 +101,19 @@ else
         % Create defaults for feed_phase, feed_ampli
         % Notice ind_contin_param(1) == feed_phase
         % and ind_contin_param(2) == feed_ampli
-        p.addParameter('step',pi/32)
+        p.addParameter('step',pi/64)
         p.addParameter('max_step', ...
-            [ind_contin_param(1),pi/16, ...
-            ind_contin_param(2),0.05])
+            [ind_contin_param(1),pi/64, ...
+            ind_contin_param(2),0.01])
         p.addParameter('newton_max_iterations',15)
         p.addParameter('max_bound',...
             [ind_contin_param(1),15*pi, ...
-            ind_contin_param(2),1.1])
+            ind_contin_param(2),2])
         p.addParameter('min_bound',...
             [ind_contin_param(1),-15*pi, ...
-            ind_contin_param(2),-0.1])
+            ind_contin_param(2),-1])
+        p.addParameter('halting_accuracy',1e-10)
+        p.addParameter('minimal_accuracy',1e-8)
 
     elseif all( ind_contin_param == ...
             [ param_struct.feed_ampli.index, ...
@@ -117,17 +121,19 @@ else
         % Create defaults for feed_ampli, feed_phase
         % Notice ind_contin_param(1) == feed_ampli
         % and ind_contin_param(2) == feed_phase
-        p.addParameter('step',0.05)
+        p.addParameter('step',0.01)
         p.addParameter('max_step', ...
-            [ind_contin_param(1),0.075, ...
-            ind_contin_param(2),pi/16])
+            [ind_contin_param(1),0.01, ...
+            ind_contin_param(2),pi/64])
         p.addParameter('newton_max_iterations',15)
         p.addParameter('max_bound',...
-            [ind_contin_param(1),1.1, ...
+            [ind_contin_param(1),2, ...
             ind_contin_param(2),15*pi])
         p.addParameter('min_bound',...
-            [ind_contin_param(1),-0.1, ...
-            ind_contin_param(2),--15*pi])
+            [ind_contin_param(1),-2, ...
+            ind_contin_param(2),-15*pi])
+        p.addParameter('halting_accuracy',1e-10)
+        p.addParameter('minimal_accuracy',1e-8)
 
     else
         % Create defaults for others
@@ -142,6 +148,8 @@ else
         p.addParameter('min_bound',...
             [ind_contin_param(1),-10, ...
             ind_contin_param(2),-10])
+        p.addParameter('halting_accuracy',1e-10)
+        p.addParameter('minimal_accuracy',1e-8)
 
     end
     
@@ -176,6 +184,16 @@ else
     if any(strcmp('min_bound',fieldnames(p.Results)))
         step_bound_flags{end+1} = 'min_bound';
         step_bound_vals{end+1} = p.Results.min_bound;
+    end
+    
+    if any(strcmp('halting_accuracy',fieldnames(p.Results)))
+        step_bound_flags{end+1} = 'halting_accuracy';
+        step_bound_vals{end+1} = p.Results.halting_accuracy;
+    end
+    
+    if any(strcmp('minimal_accuracy',fieldnames(p.Results)))
+        step_bound_flags{end+1} = 'minimal_accuracy';
+        step_bound_vals{end+1} = p.Results.minimal_accuracy;
     end
     
     % Zip like python

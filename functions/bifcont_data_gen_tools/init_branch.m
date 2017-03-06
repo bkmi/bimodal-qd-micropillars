@@ -141,8 +141,8 @@ else
         p.addParameter('step',0.003)
         p.addParameter('max_step',[ind_contin_param,0.003])
         p.addParameter('newton_max_iterations',10)
-        p.addParameter('max_bound',[ind_contin_param,0.9999])
-        p.addParameter('min_bound', [ind_contin_param,-0.5])
+        p.addParameter('max_bound',[ind_contin_param,2])
+        p.addParameter('min_bound', [ind_contin_param,-2])
         p.addParameter('halting_accuracy',1e-10)
         p.addParameter('minimal_accuracy',1e-8)
 
