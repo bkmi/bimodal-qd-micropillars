@@ -25,5 +25,8 @@ addpath('~/dde_biftool_v3.1.1/ddebiftool_extra_psol/');
 addpath('~/dde_biftool_v3.1.1/ddebiftool_utilities/');
 addpath('~/dde_biftool_v3.1.1/ddebiftool_extra_rotsym/');
 
+%% Plotting
+addpath(strcat(present_working_directory,'/BrewerMap/'))
+
 end
 

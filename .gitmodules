@@ -1,3 +1,6 @@
 [submodule "ddebiftool_multirot"]
 	path = ddebiftool_multirot
 	url = https://github.com/machism0/ddebiftool_multirot.git
+[submodule "BrewerMap"]
+	path = BrewerMap
+	url = https://github.com/DrosteEffect/BrewerMap.git
