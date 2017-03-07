@@ -22,11 +22,18 @@ Jarray = linspace(...
 
 % feedback amp settings
 feedAmpMat = [1, 0; 0, 0];
+fbAmp = [0, 0.1, 0.2, 0.3, 0.4, 0.5];
+
+% save location
+datadir = '/home/bkmiller/qd-micropillar-laser-project/data_bimodal-qd-micropillars/inputOutput/';
+
+% Save extras: fbAmp, numPoints
+save([datadir, ...
+    'extras.mat'], ...
+    'fbAmp', 'numPoints', 'Jarray','datadir')
 
 %% Turn On Solver
 timeTotal = 0;
-
-fbAmp = [0, 0.1, 0.2, 0.3, 0.4, 0.5];
 
 for j = fbAmp
 
@@ -51,11 +58,11 @@ for j = fbAmp
         timeTotal = timeTotal + toc;
     end
     
-    % Add to turnOn
-    turnOn.(['fb',num2str(j*10)]) = solnTurnOn;
-    
     disp('It took')
     disp(timeTotal)
+    
+    % Add to turnOn
+    turnOn.(['fb',num2str(j*10)]) = solnTurnOn;
 
     % Plot final intensity versus current amplitude
 
@@ -85,14 +92,13 @@ for j = fbAmp
 end
 
 % Save your TurnOn
-save(['/home/bkmiller/qd-micropillar-laser-project/data_bimodal-qd-micropillars/inputOutput/', ...
+save([datadir, ...
     'turnOn.mat'], ...
     'turnOn')
 
 %% Sweep Solver
 
 sweep = struct;
-fbAmp = [0, 0.1, 0.2, 0.3, 0.4, 0.5];
 
 for j = fbAmp
 
@@ -112,13 +118,13 @@ for j = fbAmp
     for i = 1:numel(solnSweep)
         timeTotal = timeTotal + solnSweep(i).calcTime;
     end
-    
-    % Add to turnOn
-    sweep.(['fb',num2str(j*10)]) = solnSweep;
 
     disp('It took')
     disp(timeTotal)
 
+    % Add to sweep
+    sweep.(['fb',num2str(j*10)]) = solnSweep;
+    
     % Plot final intensity versus current amplitude
 
     strongFinalIntensitySweep = zeros(numPoints,1);
@@ -148,53 +154,59 @@ for j = fbAmp
 end
 
 % Save your sweep
-save(['/home/bkmiller/qd-micropillar-laser-project/data_bimodal-qd-micropillars/inputOutput/', ...
+save([datadir, ...
     'sweep.mat'], ...
     'sweep')
 
-%% More complicated plotter for TurnOn
 
-turnOnFig = figure;
-set(gca,'yscale','log')
+%% Sweep down
 
-% colors
-colorNum = 9;
-bluecol = brewermap(colorNum,'Blues');
-redcol = brewermap(colorNum,'Reds');
+downSweep = struct;
 
-% linewidth
-linewidth = 2;
+%YOU NEED TO MAKE SURE YOU'RE SWEEPING DOWN FROM THE RIGHT VALUE
 
-hold on
-title('Turn On Time Series: Steady state intensity vs Current amplitude')
-
-for j = 1:numel(fbAmp)
-    solnTurnOn = turnOn.(['fb',num2str(fbAmp(j)*10)]);
+for j = fbAmp
+    initStruct = turnOn.(['fb',num2str(j*10)]);
     
-    strongFinalIntensity = zeros(numPoints,1);
-    weakFinalIntensity = zeros(numPoints,1);
+    solnSweepDown = sweeper(...
+        initStruct(end).param.J.index, ...
+        [Jmax, Jmin], ...
+        initStruct(end).param, ...
+        'plot',1, ...
+        'numSweepSteps', numPoints, ...
+        'hist', initStruct(end).timeSeries);
+    
+    % Add to downSweep
+    downSweep.(['fb',num2str(j*10)]) = solnSweepDown;
+    
+    % Plot final intensity versus current amplitude
+    strongFinalIntensityDown= zeros(numPoints,1);
+    weakFinalIntensityDown = zeros(numPoints,1);
     for i = 1:numPoints
-        strongFinalIntensity(i) = norm( ...
-            [solnTurnOn(i).timeSeries.y(1,end),...
-            solnTurnOn(i).timeSeries.y(2,end)] );
-        weakFinalIntensity(i) = norm( ...
-            [solnTurnOn(i).timeSeries.y(3,end),...
-            solnTurnOn(i).timeSeries.y(4,end)] );
+        strongFinalIntensityDown(i) = norm( ...
+            [solnSweepDown(i).timeSeries.y(1,end),...
+             solnSweepDown(i).timeSeries.y(2,end)] );
+        weakFinalIntensityDown(i) = norm( ...
+            [solnSweepDown(i).timeSeries.y(3,end),...
+             solnSweepDown(i).timeSeries.y(4,end)] );
     end
-
+    
+    fig2 = figure;
     % strong red
-    plot(Jarray, strongFinalIntensity,'--', ...
-    'Color',redcol(colorNum-8+j,:),'LineWidth',linewidth)
-
+    semilogy(Jarray,strongFinalIntensityDown,'r')
+    hold on
     % weak blue
-    plot(Jarray, weakFinalIntensity,'--', ...
-        'Color',bluecol(colorNum-8+j,:),'LineWidth',linewidth)
-    
-    
+    semilogy(Jarray,weakFinalIntensityDown,'b')
+    title(['Sweep Down Time Series: Final intensity vs Current amplitude, k_{ss}=',num2str(j)])
+    set(fig2,'PaperType','a4')
+    set(fig2,'PaperOrientation','landscape');
+    set(fig2,'PaperUnits','normalized');
+    set(fig2,'PaperPosition', [0 0 1 1]);
+    hold off
 end
 
-set(turnOnFig,'PaperType','a4')
-set(turnOnFig,'PaperOrientation','landscape');
-set(turnOnFig,'PaperUnits','normalized');
-set(turnOnFig,'PaperPosition', [0 0 1 1]);
-hold off
+% Save your sweep
+save([datadir, ...
+    'downSweep.mat'], ...
+    'downSweep')
+

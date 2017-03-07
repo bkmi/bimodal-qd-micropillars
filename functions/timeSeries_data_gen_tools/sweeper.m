@@ -33,6 +33,10 @@ function [ soln, figFirst, figLast ] = sweeper( ind_parSweep, parBound, param, v
 %       'quiet' = 0, 1
 %           0 -> usual output.
 %           1 -> no disp output.
+%       'hist' = [1e-9;0;1e-9;0;0;0] OR dde23_soln
+%           Allows the user to specify the history vector. If the given
+%           hist is a dde23_soln then sweeper will continue from the
+%           previous solution.
 %
 %   master_options:
 %       'save' = 0, 1
@@ -59,6 +63,7 @@ p.addParameter('oscTol', 1e-6)
 p.addParameter('numSweepSteps', 50)
 p.addParameter('save_name', 'dde23_soln')
 p.addParameter('quiet', 1)
+p.addParameter('hist',[1e-9;0;1e-9;0;0;0])
 
 
 % Master option defaults
@@ -100,13 +105,29 @@ end
 %% Calculate the turn on time series
 tic; % Start timer
 
-[soln(1).timeSeries,figFirst] = solver( ...
-    [1e-9;0;1e-9;0;0;0], ...
-    [0,1.5*options.durTimeSeries], ...
-    soln(1).param, ...
-    'plot',options.plot, ...
-    'quiet', options.quiet);
-% ,'dde23_options',ddeset('RelTol',10^-8,'OutputFcn', @odeplot));
+
+% Using the default value for hist and an input value for hist works the
+% same way thanks to the design of 'solver'
+if isa(options.hist, 'double')
+    % When hist is a vector
+    [soln(1).timeSeries,figFirst] = solver( ...
+        options.hist, ...
+        [0,1.5*options.durTimeSeries], ...
+        soln(1).param, ...
+        'plot',options.plot, ...
+        'quiet', options.quiet);
+    % ,'dde23_options',ddeset('RelTol',10^-8,'OutputFcn', @odeplot));
+elseif isa(options.hist, 'struct')
+    % When it's a struct, AKA continuing the previous sweep
+    [soln(1).timeSeries,figFirst] = solver( ...
+        options.hist, ...
+        [options.hist.x(end), ...
+         options.hist.x(end) + 1.5*options.durTimeSeries], ...
+        soln(1).param, ...
+        'plot',options.plot, ...
+        'quiet', options.quiet);
+    % ,'dde23_options',ddeset('RelTol',10^-8,'OutputFcn', @odeplot));
+end
 
 soln(1).calcTime = toc; % Stop Timer
 
