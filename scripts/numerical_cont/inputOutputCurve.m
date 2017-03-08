@@ -4,8 +4,8 @@ clear;
 
 % Threshold is ~43e-6 Amps
 Jmin = 43e-6;
-Jmax = 700e-6;
-numPoints = 75;
+Jmax = 750e-6;
+numPoints = 150;
 
 turnOn = struct;
 
@@ -156,7 +156,7 @@ end
 % Save your sweep
 save([datadir, ...
     'sweep.mat'], ...
-    'sweep')
+    'sweep', '-v7.3')
 
 
 %% Sweep down
@@ -208,5 +208,5 @@ end
 % Save your sweep
 save([datadir, ...
     'downSweep.mat'], ...
-    'downSweep')
+    'downSweep', '-v7.3')
 
