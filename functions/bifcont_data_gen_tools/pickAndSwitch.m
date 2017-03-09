@@ -39,15 +39,15 @@ function [ outBranch ] = pickAndSwitch( ...
 %           single parameter. If you call a cell array then that cell array
 %           takes priority.
 %
-% %       'par_overwrite' = branch.point(1).parameter OR param.values
-% %           Calling this flag overrides the values given in the
-% %           param_struct. This is particularly useful if you would like to
-% %           make a new branch starting at a point along a DDEBIF
-% %           bifurcation continuation.
-% % 
-% %           THE ORDER/INDICES DETERMINED IN param_struct MUST BE THE SAME 
-% %           AS IN YOUR 'par_overwrite' VALUES OR THERE WILL BE MASSIVE 
-% %           ERROR.
+%       'par_overwrite' = branch.point(1).parameter OR param.values
+%           Calling this flag overrides the values given in the
+%           param_struct. This is particularly useful if you would like to
+%           make a new branch starting at a point along a DDEBIF
+%           bifurcation continuation.
+% 
+%           THE ORDER/INDICES DETERMINED IN param_struct MUST BE THE SAME 
+%           AS IN YOUR 'par_overwrite' VALUES OR THERE WILL BE MASSIVE 
+%           ERROR.
 %
 %       'reverse' = 0, 1
 %           Default to 0. 0 means the continuation will not reverse. 1
