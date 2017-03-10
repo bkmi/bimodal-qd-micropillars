@@ -159,7 +159,7 @@ fprintf('\n\n\n\nFiles loaded:\n')
 disp(data)
 fprintf('\n\n')
 
-if options.overwrite == 0
+if any(strcmp(p.UsingDefaults, 'overwrite'))
     % Would the user like to overwrite files?
     loaded_overwrite_opt = ...
         input(['\n\nWARNING: You have loaded this data.',...
@@ -176,6 +176,10 @@ if options.overwrite == 0
             break
         end
     end
+elseif options.overwrite == 0 ...
+        && ~any(strcmp(p.UsingDefaults, 'overwrite'))
+    saveit = 0; %Don't save and don't overwrite.
+    fprintf('\nScripts will NOT save results!!!\n\n')
 elseif options.overwrite == 1
     % Overwrite, but don't ask!!
     saveit = 1;
