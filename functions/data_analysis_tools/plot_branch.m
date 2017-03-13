@@ -1,4 +1,7 @@
-function [ ptBranInd_extrema, figHandle ] = plot_branch( branch, ...
+function [ ...
+    ptBranInd_extrema, ...
+    figHandle, ...
+    lineHandles ] = plot_branch( branch, ...
     param, ...
     varargin )
 %Plot a branch (by default) along its two free continuation parameters.
@@ -80,6 +83,9 @@ options = p.Results;
 
 % Get hold status and save hold status
 held_prior = ishold;
+
+% line Handles
+lineHandles = {};
 
 % Handle add_2_gcf
 if options.add_2_gcf==1
@@ -193,7 +199,7 @@ if options.polar ~= 1
 
         hold on
         for i=0:max(nunst_pts)
-            plot(sel(x_param_vals,i),sel(y_param_vals1,i), ...
+            lineHandles{end+1} = plot(sel(x_param_vals,i),sel(y_param_vals1,i), ...
                 'Color',colors(i+1,:), options.PlotStyle{:} );
         end
         hold off
@@ -225,7 +231,7 @@ if options.polar ~= 1
 
         hold on
         for i=0:max(nunst_pts)
-            plot(sel(x_param_vals,i),sel(y_param_vals2,i), ...
+            lineHandles{end+1} = plot(sel(x_param_vals,i),sel(y_param_vals2,i), ...
                 'Color',colors(i+1,:), options.PlotStyle{:} );
         end
         hold off
@@ -261,7 +267,7 @@ if options.polar ~= 1
 
         hold on
         for i=0:max(nunst_pts)
-            plot(sel(x_param_vals,i),sel(y_param_vals,i), ...
+            lineHandles{end+1} = plot(sel(x_param_vals,i),sel(y_param_vals,i), ...
                 'Color',colors(i+1,:), options.PlotStyle{:} );
         end
         hold off
@@ -281,7 +287,7 @@ if options.polar ~= 1
             num2cell((max_nunst/10)-1 + max_nunst/10:max_nunst/10:max_nunst+1)])
         %}
     else
-        plot(x_param_vals,y_param_vals, ...
+        lineHandles{end+1} = plot(x_param_vals,y_param_vals, ...
             'Color',options.color, options.PlotStyle{:} );
     end
 elseif options.polar == 1
