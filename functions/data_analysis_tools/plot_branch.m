@@ -48,6 +48,8 @@ function [ ptBranInd_extrema, figHandle ] = plot_branch( branch, ...
 %       'polar' = 0, 1
 %           With 1, the value for x turns into phi, the value for y turns
 %           into rho. Polar can only handle options.color = '--r', etc...
+%       'YTickLabel' = {'Off'}
+%           List the names you want on the label.
 
 %% Defaults + inputParser + Organize behavior
 
@@ -62,6 +64,7 @@ p.addParameter('nunst_color',[])
 p.addParameter('PlotStyle', { 'LineStyle', 'none', 'Marker', '.' })
 p.addParameter('polar',0)
 p.addParameter('twoOmegaNunst',0)
+p.addParameter('YTickLabel',{'Off'})
 
 
 % Master option defaults
@@ -271,7 +274,7 @@ if options.polar ~= 1
         %}
 
         colormap(colors)
-        colorbar('YTickLabel','Off')
+        colorbar('YTickLabel',options.YTickLabel)
         %{
         colorbar('YTickLabel', ...
             [{(max_nunst/10)-1}, ...
