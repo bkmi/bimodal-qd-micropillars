@@ -25,7 +25,7 @@ set(gca,'yscale','log')
 set(gca,tdeco{:});
 
 hold on
-title('Turn On Time Series: Steady state intensity vs Current amplitude',tdeco{:})
+title('Turn On I/O: Steady state intensity vs Current amplitude',tdeco{:})
 xlabel('Current amplitude (\muA)',tdeco{:})
 ylabel('Steady state intensity (a.u.)',tdeco{:})
 
@@ -97,7 +97,7 @@ set(gca,'yscale','log')
 set(gca,tdeco{:});
 
 hold on
-title('Sweep Up Time Series: Final intensity vs Current amplitude',tdeco{:})
+title('Sweep Up I/O: Steady state intensity vs Current amplitude',tdeco{:})
 xlabel('Current amplitude (\muA)',tdeco{:})
 ylabel('Steady state intensity (a.u.)',tdeco{:})
 
@@ -166,7 +166,7 @@ set(gca,'yscale','log')
 set(gca,tdeco{:});
 
 hold on
-title('Sweep Down Time Series: Final intensity vs Current amplitude',tdeco{:})
+title('Sweep Down I/O: Steady state intensity vs Current amplitude',tdeco{:})
 xlabel('Current amplitude (\muA)',tdeco{:})
 ylabel('Steady state intensity (a.u.)',tdeco{:})
 
