@@ -18,6 +18,9 @@ addpath(strcat(present_working_directory,'/scripts/feedbackTree/'))
 addpath(strcat(present_working_directory,'/scripts/numerical_cont/'))
 addpath(strcat(present_working_directory,'/scripts/simple_run/'))
 
+addpath(strcat(present_working_directory,'/prez_scripts/'))
+
+
 %% DDE-BIFTOOL
 addpath(strcat(present_working_directory,'/ddebiftool_multirot/')) % Multi_rot
 addpath('~/dde_biftool_v3.1.1/ddebiftool/'); 
