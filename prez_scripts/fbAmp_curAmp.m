@@ -215,8 +215,64 @@ pruneFold = foldOne;
 pruneFold.point(1:70) = [];
 pruneFold.point(end-25:end) = [];
 
-[~,~,fig] = plot_branch(pruneFold, param);
-ax = gca;
+% plot settings
+tdeco={'fontsize',25,'fontweight','bold'}; % 
+ldeco={'fontsize',23}; % ,'fontweight','bold'
+lgndFontSize = 18;
+
+% colors
+colorNum = 6;
+greycol = brewermap(colorNum,'Greys');
+orangecol = brewermap(colorNum,'Oranges');
+
+% save location
+datadir = '../data_bimodal-qd-micropillars/';
+
+fig = figure('Color','White');
+
+x = zeros(numel(pruneFold.point),1);
+y = zeros(numel(pruneFold.point),1);
+
+for i = 1:numel(pruneFold.point)
+    x(i) = pruneFold.point(i).parameter(param.feed_ampli.index);
+    y(i) = pruneFold.point(i).parameter(param.J.index);
+end
+
+% Scale
+y = y * 1e6;
+
+ax = plot(x,y,'Color','k','LineWidth',3);
+xlim([0,0.5]);
+
+grid on
+
+lgnd = legend('Saddle-node Bifurcation');
+lgnd.FontSize = lgndFontSize;
+lgnd.Location = 'SouthEast';
+
+% title('Stability with Strong Mode Feedback',tdeco{:})
+xlabel('Feedback Amplitude (no units)',ldeco{:})
+ylabel('Current Amplitude (\muA)',ldeco{:})
+
+% Add text
+text(0.15,900,'Multistable Region','FontSize',lgndFontSize);
+text(0.35,300,'Monostable Region', 'FontSize',lgndFontSize);
+
+
+% Page settings
+set(fig,'PaperType','a4')
+set(fig,'PaperOrientation','landscape');
+set(fig,'PaperUnits','normalized');
+set(fig,'PaperPosition', [0 0 1 1]);
+
+bifDiga = [datadir, 'bifDiag','.pdf'];
+print(fig, ...
+    bifDiga, ...
+    '-dpdf')
+
+
+
+
 
 
 
