@@ -216,9 +216,9 @@ pruneFold.point(1:70) = [];
 pruneFold.point(end-25:end) = [];
 
 % plot settings
-tdeco={'fontsize',25,'fontweight','bold'}; % 
-ldeco={'fontsize',23}; % ,'fontweight','bold'
-lgndFontSize = 18;
+tdeco={'fontsize',30,'fontweight','bold'}; % 
+ldeco={'fontsize',28}; % ,'fontweight','bold'
+lgndFontSize = 24;
 
 % colors
 colorNum = 6;
@@ -227,6 +227,8 @@ orangecol = brewermap(colorNum,'Oranges');
 
 % save location
 datadir = '../data_bimodal-qd-micropillars/';
+
+
 
 fig = figure('Color','White');
 
@@ -241,12 +243,25 @@ end
 % Scale
 y = y * 1e6;
 
-ax = plot(x,y,'Color','k','LineWidth',3);
+% for filling
+xfill = [x', fliplr(x')];
+yfill = [y', ones(1,numel(x)) * 1900];
+ax = gca;
+set(ax,'FontSize',lgndFontSize);
+
+% plotting
+hold on
+ar2 = fill(xfill,yfill, 'blue','FaceAlpha',0.6); 
+ar1 = area(ax, x,y,'FaceColor', 'k','FaceAlpha',0.5);
+ln = plot(ax, x,y,'Color','k','LineWidth',3);
+
+% limits
 xlim([0,0.5]);
+ylim([0,1400]);
 
 grid on
 
-lgnd = legend('Saddle-node Bifurcation');
+lgnd = legend(ln, 'Saddle-node Bifurcation');
 lgnd.FontSize = lgndFontSize;
 lgnd.Location = 'SouthEast';
 
@@ -255,8 +270,8 @@ xlabel('Feedback Amplitude (no units)',ldeco{:})
 ylabel('Current Amplitude (\muA)',ldeco{:})
 
 % Add text
-text(0.15,900,'Multistable Region','FontSize',lgndFontSize);
-text(0.35,300,'Monostable Region', 'FontSize',lgndFontSize);
+text(0.15,900,'Bistable Region','FontSize',lgndFontSize);
+text(0.3,300,'Monostable Region', 'FontSize',lgndFontSize,'Color','w');
 
 
 % Page settings
@@ -265,10 +280,13 @@ set(fig,'PaperOrientation','landscape');
 set(fig,'PaperUnits','normalized');
 set(fig,'PaperPosition', [0 0 1 1]);
 
-bifDiga = [datadir, 'bifDiag','.pdf'];
+bifDiga = [datadir, 'bifDiag'];
+% print(fig, ...
+%     bifDiga, ...
+%     '-dpdf')
 print(fig, ...
     bifDiga, ...
-    '-dpdf')
+    '-dpng')
 
 
 
