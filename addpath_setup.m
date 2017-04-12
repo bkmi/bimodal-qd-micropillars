@@ -15,10 +15,9 @@ addpath(strcat(present_working_directory,'/functions/data_analysis_tools/'))
 %scripts
 addpath(strcat(present_working_directory,'/scripts/'))
 addpath(strcat(present_working_directory,'/scripts/feedbackTree/'))
-addpath(strcat(present_working_directory,'/scripts/numerical_cont/'))
 addpath(strcat(present_working_directory,'/scripts/simple_run/'))
-
-addpath(strcat(present_working_directory,'/prez_scripts/'))
+addpath(strcat(present_working_directory,'/scripts/IOcurveScripts/'))
+addpath(strcat(present_working_directory,'/scripts/prez_scripts/'))
 
 
 %% DDE-BIFTOOL
