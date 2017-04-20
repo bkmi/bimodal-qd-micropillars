@@ -18,6 +18,7 @@ addpath(strcat(present_working_directory,'/scripts/feedbackTree/'))
 addpath(strcat(present_working_directory,'/scripts/simple_run/'))
 addpath(strcat(present_working_directory,'/scripts/IOcurveScripts/'))
 addpath(strcat(present_working_directory,'/scripts/prez_scripts/'))
+addpath(strcat(present_working_directory,'/scripts/bifurcationSelfFB/'))
 
 
 %% DDE-BIFTOOL
