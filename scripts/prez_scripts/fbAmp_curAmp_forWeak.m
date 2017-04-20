@@ -1,4 +1,9 @@
 %% fbAmp_curAmp given weak only feedback
+% This script generates a bifurcation diagram with fbAmplitude on the y
+% axis and current Amplitude on the x axis. It shows the region of
+% bistability. (Where both the strong mode and the weak mode have a stable
+% solution which dominates the intensity output.) Specifically, this one is
+% used for the case where the weak mode feedsback into the weak mode.
 
 feedPhaseMat = [1, 1; 1, 1];
 feedAmpMat = [0, 0; 0, 1];

@@ -1,4 +1,9 @@
 %% Feedback amplitude, current amplitude
+% This script generates a bifurcation diagram with fbAmplitude on the y
+% axis and current Amplitude on the x axis. It shows the region of
+% bistability. (Where both the strong mode and the weak mode have a stable
+% solution which dominates the intensity output.) Specifically, this one is
+% used for the case where the strong mode feedsback into the strong mode.
 
 clear;
 
