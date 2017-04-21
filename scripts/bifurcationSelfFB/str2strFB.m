@@ -158,7 +158,7 @@ branchStstWeakDom.indHopf = find(abs(diff(branchStstWeakDom.nunst))==2);
 % create container for phase stst branches
 numPhaseBranches = 4;
 pts4PhaseBranch = round( ...
-    numel(branchStstWeakDom.point)/(numPhaseBranches-2) * ( 1:numPhaseBranches + 1) );
+    numel(branchStstWeakDom.point)/(numPhaseBranches+2) * ( [1:numPhaseBranches] + 1) );
 branch_length = 180;
 
 branchPhaseWeakDom = repmat( ...
@@ -409,7 +409,7 @@ branchStstStrDom.indHopf = find(abs(diff(branchStstStrDom.nunst))==2);
 % create container for phase stst branches
 numPhaseBranches = 4;
 pts4PhaseBranch = round( ...
-    numel(branchStstStrDom.point)/(numPhaseBranches-2) * ( 1:numPhaseBranches + 1) );
+    numel(branchStstStrDom.point)/(numPhaseBranches+2) * ( [1:numPhaseBranches] + 1) );
 branch_length = 180;
 
 branchPhaseStrDom = repmat( ...
