@@ -360,7 +360,7 @@ for j = 1:numel(hopfPkgWeakDom)
                 opt_inputs{:},...
                 stepBoundHopfWeak{:});
 
-            hopfBranchLength = 50;
+            hopfBranchLength = 100;
 
             [hopfOne,~,~,~] = br_contn(funcs,hopfOne,hopfBranchLength);
             hopfOne = br_rvers(hopfOne);
@@ -659,7 +659,7 @@ stepBoundHopfStr = { ...
 hopfPkgStrDom = cell(numPhaseBranches,1);
 
 
-for j = 2 % 2:numel(hopfPkgStrDom)
+for j = 1:numel(hopfPkgStrDom)
     % prepare pts to continue
     pickBranch = branchPhaseStrDom(j,1); % input branch to analyse
     ptsHopfsStrDom = 1:numel(pickBranch.indHopf); % select points by index of index
@@ -693,7 +693,7 @@ for j = 2 % 2:numel(hopfPkgStrDom)
                 opt_inputs{:},...
                 stepBoundHopfStr{:});
 
-            hopfBranchLength = 50;
+            hopfBranchLength = 100;
 
             [hopfOne,~,~,~] = br_contn(funcs,hopfOne,hopfBranchLength);
             hopfOne = br_rvers(hopfOne);
@@ -746,40 +746,40 @@ save([datadir, ...
     'stepBoundHopfStr', 'hopfPkgStrDom');
 
 %% BASIC PLOT
-
-% str
-ok = figure('color','w');
-for i = 1:numel(hopfPkgStrDom)
-    for j = 1:numel(hopfPkgStrDom{i,1})
-        plotIT = hopfPkgStrDom{i,1};
-        if plotIT(j).error == 0;
-            plot_branch(plotIT(j),paramStrDom,'add_2_gcf',1, ...
-                'PlotStyle',{ 'LineStyle', '-', 'Marker', '.' });
-        end
-    end
-end
-
-for i = 1:numel(foldPkgStrDom)
-    for j = 1:numel(foldPkgStrDom{i,1})
-        plotIT = foldPkgStrDom{i,1};
-        if plotIT(j).error == 0;
-            plot_branch(plotIT(j),paramStrDom,'add_2_gcf',1,'color','r', ...
-                'PlotStyle',{ 'LineStyle', '-', 'Marker', '.' } );
-        end
-    end
-end
-
-set(ok,'PaperType','a4')
-set(ok,'PaperOrientation','landscape');
-set(ok,'PaperUnits','normalized');
-set(ok,'PaperPosition', [0 0 1 1]);
-
-ylim([0,1])
-
-okName = [datadir, 'strDom','.pdf'];
-print(ok, ...
-    okName, ...
-    '-dpdf')
+% 
+% % str
+% ok = figure('color','w');
+% for i = 1:numel(hopfPkgStrDom)
+%     for j = 1:numel(hopfPkgStrDom{i,1})
+%         plotIT = hopfPkgStrDom{i,1};
+%         if plotIT(j).error == 0;
+%             plot_branch(plotIT(j),paramStrDom,'add_2_gcf',1, ...
+%                 'PlotStyle',{ 'LineStyle', '-', 'Marker', '.' });
+%         end
+%     end
+% end
+% 
+% for i = 1:numel(foldPkgStrDom)
+%     for j = 1:numel(foldPkgStrDom{i,1})
+%         plotIT = foldPkgStrDom{i,1};
+%         if plotIT(j).error == 0;
+%             plot_branch(plotIT(j),paramStrDom,'add_2_gcf',1,'color','r', ...
+%                 'PlotStyle',{ 'LineStyle', '-', 'Marker', '.' } );
+%         end
+%     end
+% end
+% 
+% set(ok,'PaperType','a4')
+% set(ok,'PaperOrientation','landscape');
+% set(ok,'PaperUnits','normalized');
+% set(ok,'PaperPosition', [0 0 1 1]);
+% 
+% ylim([0,1])
+% 
+% okName = [datadir, 'strDom','.pdf'];
+% print(ok, ...
+%     okName, ...
+%     '-dpdf')
 
 % % weak
 % figure
@@ -802,4 +802,58 @@ print(ok, ...
 %         end
 %     end
 % end
+
+%% 3D PLOT
+
+for i = 1:numel(hopfPkgStrDom)
+    for j = 1:numel(hopfPkgStrDom{i})
+        if hopfPkgStrDom{i}(j,1).error == 0
+            plot_branch3(hopfPkgStrDom{i}(j,1), paramStrDom, ...
+                'add_2_gcf',1, ...
+                'color', 'cyan', ...
+                'axes_indParam', ...
+                {hopfPkgStrDom{i}(j,1).parameter.free(1), ...
+                hopfPkgStrDom{i}(j,1).parameter.free(2), ...
+                'x1'}, ...
+                'PlotStyle', { 'LineStyle', '-', 'Marker', '.' } );
+        end
+    end
+    
+    for j = 1:numel(foldPkgStrDom{i})
+        if foldPkgStrDom{i}(j,1).error == 0
+            plot_branch3(foldPkgStrDom{i}(j,1), paramStrDom, ...
+                'add_2_gcf',1, ...
+                'color', 'r', ...
+                'axes_indParam', ...
+                {foldPkgStrDom{i}(j,1).parameter.free(1), ...
+                foldPkgStrDom{i}(j,1).parameter.free(2), ...
+                'x1'}, ...
+                'PlotStyle', { 'LineStyle', '-', 'Marker', '.' } );
+        end
+    end
+    
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

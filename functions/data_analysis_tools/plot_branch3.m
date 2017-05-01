@@ -3,6 +3,34 @@ function [  ] = plot_branch3( branch, param, varargin )
 %   The x-axis gets branch.parameter.free(1).
 %   The y-axis gets branch.parameter.free(2).
 %   The z-axis gets branch.parameter.free(3).
+%
+%   Input:
+%       branch
+%       param_struct
+%       varargin
+%
+%   Options:
+%       'axes_indParam' = [ 0, 0, 0 ], { 0, 0, x1 }
+%           Calling this sets the axes along different parameters than
+%           given by branch.parameter.free. The axes are determined by the
+%           index of the parameter you enter. The x-axis goes with the
+%           first, the y-axis goes with the second, z-axis with the third.
+%           By calling a cell with the string 'x_'. You can select the _th
+%           dynamic variable value.
+%       'add_2_gcf' = 0, 1
+%           'add_2_gcf' = 1 -> Adds plot to current figure.
+%           'add_2_gcf' = 0 or Not Called -> New figure.
+%       'color' = [ 0, 0, 0 ] OR 'b', 'y', etc.
+%           The branch will be the given color.
+%       'nunst_color' = nunst_branch OR {nunst_branch, int_max}
+%           Color the dots based on their nunst value. Overrides 'color'.
+%           If you give a cell array with an int_max then the plotter will
+%           plot as if int_max is the highest possible nunst. This is
+%           useful if you want to plot multiple branches on the same plot.
+%       'PlotStyle' = { 'LineStyle', '-', 'Marker', '.' }
+%           Input a cell array which will be passed to the plotter. Usual
+%           plot commands apply.
+
 %% Defaults + inputParser + Organize behavior
 
 p = inputParser;
@@ -82,19 +110,6 @@ for i = 1:numel(options.axes_indParam)
             branch.point);
     end
 end
-
-% x = arrayfun(@(p)p.parameter(options.axes_indParam{1}), ... 
-%     branch.point);
-% y = arrayfun(@(p)p.parameter(options.axes_indParam{2}), ...
-%     branch.point);
-% z = arrayfun(@(p)p.parameter(options.axes_indParam{3}), ...
-%     branch.point);
-
-
-% YOU NEED TO UPDATE THIS THING SO IT DOESN'T ASSUME YOU ARE USING
-% NUNST_COLOR ALL THE TIME.
-
-
 
 
 %% Plot
