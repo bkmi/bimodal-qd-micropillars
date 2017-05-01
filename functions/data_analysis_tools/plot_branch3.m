@@ -139,7 +139,7 @@ if ~any(strcmp('nunst_color',p.UsingDefaults))
 
     colormap(colors)
     colorbar()
-    colorbar('YTickLabel',options.YTickLabel)
+%     colorbar('YTickLabel',options.YTickLabel)
     
 else
     % General plot
