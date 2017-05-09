@@ -131,7 +131,8 @@ if ~any(strcmp('nunst_color',p.UsingDefaults))
     colors = lines(max_nunst+1);
 
     hold on
-    for i=0:max(nunst_pts)
+%     for i=0:max(nunst_pts)
+    for i=0:max_nunst % max(nunst_pts)
         plot3(sel(plotVal(1,:),i),sel(plotVal(2,:),i),sel(plotVal(3,:),i), ...
             'Color',colors(i+1,:), options.PlotStyle{:});
     end
