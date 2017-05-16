@@ -61,14 +61,15 @@ extendedRibs = cell(4,1);
     save([datadir, ...
         'extendedRibs.mat'], ...
         'extendedRibs')
+howmanypts = 3000;
 
 for i = [19,20,21,22]
     curBranch = branchPhaseStrDom(i,1);
     
     % calculate
-    curBranch = br_contn(funcs, curBranch, 1200);
+    curBranch = br_contn(funcs, curBranch, howmanypts);
     curBranch = br_rvers(curBranch);
-    curBranch = br_contn(funcs, curBranch, 1200);
+    curBranch = br_contn(funcs, curBranch, howmanypts);
     
     % stability analysis
     [curBranch.nunst,~,~,curBranch.point] = GetRotStability( ...
@@ -79,7 +80,7 @@ for i = [19,20,21,22]
     curBranch.error = 0;
     
     % add to 
-    extendedRibs(i,1) = curBranch;
+    extendedRibs{i,1} = curBranch;
     
     % Save Strong Dom
     save([datadir, ...
