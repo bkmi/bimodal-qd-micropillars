@@ -20,7 +20,8 @@ fbAmp = [0, 0.1, 0.2, 0.3, 0.4, 0.5];
 
 % save location
 foldername  = 'str2str_IO';
-datadir = ['/home/bkmiller/qd-micropillar-laser-project/data_bimodal-qd-micropillars/',foldername];
+datadir = ['/home/bkmiller/qd-micropillar-laser-project/data_bimodal-qd-micropillars/',foldername,'/'];
+mkdir(datadir)
 
 % Save extras: fbAmp, numPoints
 save([datadir, ...
