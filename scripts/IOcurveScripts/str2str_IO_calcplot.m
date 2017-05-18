@@ -25,7 +25,7 @@ datadir = ['/home/bkmiller/qd-micropillar-laser-project/data_bimodal-qd-micropil
 % Save extras: fbAmp, numPoints
 save([datadir, ...
     'extras.mat'], ...
-    'fbAmp', 'numPoints', 'Jarray','datadir')
+    'fbAmp', 'numCurrentPoints', 'Jarray','datadir')
 
 
 
@@ -39,7 +39,7 @@ solnTurnOn = repmat(...
     'timeSeries',struct, ...
     'J',0,...
     'param',struct, ...
-    'calcTime',0),[numPoints,1]);
+    'calcTime',0),[numCurrentPoints,1]);
 
 for j = fbAmp
     for i = 1:numel(Jarray)
@@ -167,7 +167,7 @@ for j = fbAmp
         [Jmax, Jmin], ...
         initStruct(end).param, ...
         'plot',1, ...
-        'numSweepSteps', numPoints, ...
+        'numSweepSteps', numCurrentPoints, ...
         'hist', initStruct(end).timeSeries);
     
     % Add to downSweep
@@ -276,9 +276,9 @@ weakPlotsSweepUp = cell(numel(relFBamps),1);
 for j = 1 % :numel(relFBamps) % NO FB
     solnSweep = sweep.(['fb',num2str(relFBamps(j)*10)]);
     
-    strongFinalIntensitySweep = zeros(numPoints,1);
-    weakFinalIntensitySweep = zeros(numPoints,1);
-    for i = 1:numPoints
+    strongFinalIntensitySweep = zeros(numCurrentPoints,1);
+    weakFinalIntensitySweep = zeros(numCurrentPoints,1);
+    for i = 1:numCurrentPoints
         strongFinalIntensitySweep(i) = norm( ...
             [solnSweep(i).timeSeries.y(1,end),...
              solnSweep(i).timeSeries.y(2,end)] );
@@ -337,9 +337,9 @@ weakPlotsSweepDown = cell(numel(relFBamps),1);
 for j = 1 % :numel(relFBamps) % NO FB
     solnDownSweep = downSweep.(['fb',num2str(relFBamps(j)*10)]);
     
-    strongFinalIntensityDownSweep = zeros(numPoints,1);
-    weakFinalIntensityDownSweep = zeros(numPoints,1);
-    for i = 1:numPoints
+    strongFinalIntensityDownSweep = zeros(numCurrentPoints,1);
+    weakFinalIntensityDownSweep = zeros(numCurrentPoints,1);
+    for i = 1:numCurrentPoints
         strongFinalIntensityDownSweep(i) = norm( ...
             [solnDownSweep(i).timeSeries.y(1,end),...
              solnDownSweep(i).timeSeries.y(2,end)] );
@@ -502,9 +502,9 @@ weakPlotsSweepUp = cell(numel(relFBamps),1);
 for j = 2 % :numel(relFBamps) % NO FB
     solnSweep = sweep.(['fb',num2str(relFBamps(j)*10)]);
     
-    strongFinalIntensitySweep = zeros(numPoints,1);
-    weakFinalIntensitySweep = zeros(numPoints,1);
-    for i = 1:numPoints
+    strongFinalIntensitySweep = zeros(numCurrentPoints,1);
+    weakFinalIntensitySweep = zeros(numCurrentPoints,1);
+    for i = 1:numCurrentPoints
         strongFinalIntensitySweep(i) = norm( ...
             [solnSweep(i).timeSeries.y(1,end),...
              solnSweep(i).timeSeries.y(2,end)] );
@@ -560,9 +560,9 @@ weakPlotsSweepDown = cell(numel(relFBamps),1);
 for j = 2 % :numel(relFBamps) % NO FB
     solnDownSweep = downSweep.(['fb',num2str(relFBamps(j)*10)]);
     
-    strongFinalIntensityDownSweep = zeros(numPoints,1);
-    weakFinalIntensityDownSweep = zeros(numPoints,1);
-    for i = 1:numPoints
+    strongFinalIntensityDownSweep = zeros(numCurrentPoints,1);
+    weakFinalIntensityDownSweep = zeros(numCurrentPoints,1);
+    for i = 1:numCurrentPoints
         strongFinalIntensityDownSweep(i) = norm( ...
             [solnDownSweep(i).timeSeries.y(1,end),...
              solnDownSweep(i).timeSeries.y(2,end)] );
@@ -754,9 +754,9 @@ weakPlotsSweepUp = cell(numel(relFBamps),1);
 for j = 3 % :numel(relFBamps) % NO FB
     solnSweep = sweep.(['fb',num2str(relFBamps(j)*10)]);
     
-    strongFinalIntensitySweep = zeros(numPoints,1);
-    weakFinalIntensitySweep = zeros(numPoints,1);
-    for i = 1:numPoints
+    strongFinalIntensitySweep = zeros(numCurrentPoints,1);
+    weakFinalIntensitySweep = zeros(numCurrentPoints,1);
+    for i = 1:numCurrentPoints
         strongFinalIntensitySweep(i) = norm( ...
             [solnSweep(i).timeSeries.y(1,end),...
              solnSweep(i).timeSeries.y(2,end)] );
@@ -814,9 +814,9 @@ weakPlotsSweepDown = cell(numel(relFBamps),1);
 for j = 3 % :numel(relFBamps) % NO FB
     solnDownSweep = downSweep.(['fb',num2str(relFBamps(j)*10)]);
     
-    strongFinalIntensityDownSweep = zeros(numPoints,1);
-    weakFinalIntensityDownSweep = zeros(numPoints,1);
-    for i = 1:numPoints
+    strongFinalIntensityDownSweep = zeros(numCurrentPoints,1);
+    weakFinalIntensityDownSweep = zeros(numCurrentPoints,1);
+    for i = 1:numCurrentPoints
         strongFinalIntensityDownSweep(i) = norm( ...
             [solnDownSweep(i).timeSeries.y(1,end),...
              solnDownSweep(i).timeSeries.y(2,end)] );
