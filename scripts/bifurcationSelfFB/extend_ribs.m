@@ -90,6 +90,37 @@ for i = [19,20,21,22]
     
 end
 
+%% plot the extended ribs
+
+% fix weirdness above
+for i = 1:numel(extendedRibs)
+    extndStruct(i,1) = extendedRibs{i,1};
+end
+
+figure();
+
+% find highest nunst
+globalmax = 0;
+for i = 1: numel(extndStruct)
+    localmax = max(extndStruct(i,1).nunst);
+    if localmax > globalmax
+        globalmax = localmax;
+    end
+end
+
+% ribs
+for i = 1:numel(extndStruct)
+    plot_branch3(extndStruct(i,1), paramStrDom, ...
+        'nunst_color',{extndStruct(i,1).nunst,globalmax}, ...
+        'add_2_gcf',1, ...
+        'axes_indParam', ...
+        {paramStrDom.feed_phase.index, ...
+        paramStrDom.feed_ampli.index, ...
+        'x1'}, ...
+        'PlotStyle', { 'LineStyle', 'None', 'Marker', '.' } );
+end
+
+
 %% Let's do more in that region
 
 % create container for phase stst branches
@@ -153,3 +184,28 @@ for i = 1:numPhaseBranches
     
 end
 
+
+%% plot lets do more in that region stuff
+
+figure();
+
+% find highest nunst
+globalmax = 0;
+for i = 1: numel(transitionPhaseBranchesStrDom)
+    localmax = max(transitionPhaseBranchesStrDom(i,1).nunst);
+    if localmax > globalmax
+        globalmax = localmax;
+    end
+end
+
+% ribs
+for i = 1:numel(transitionPhaseBranchesStrDom)
+    plot_branch3(transitionPhaseBranchesStrDom(i,1), paramStrDom, ...
+        'nunst_color',{transitionPhaseBranchesStrDom(i,1).nunst, globalmax}, ...
+        'add_2_gcf',1, ...
+        'axes_indParam', ...
+        {paramStrDom.feed_phase.index, ...
+        paramStrDom.feed_ampli.index, ...
+        'x1'}, ...
+        'PlotStyle', { 'LineStyle', 'None', 'Marker', '.' } );
+end
