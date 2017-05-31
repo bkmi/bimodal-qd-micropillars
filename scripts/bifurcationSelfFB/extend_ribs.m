@@ -307,3 +307,28 @@ for i = 1:numPhaseBranches
         '-append');
     
 end
+
+%% plot the precisePhaseBranchesStrDom
+
+figure();
+
+% find highest nunst
+globalmax = 0;
+for i = 1: numel(precisePhaseBranchesStrDom)
+    localmax = max(precisePhaseBranchesStrDom(i,1).nunst);
+    if localmax > globalmax
+        globalmax = localmax;
+    end
+end
+
+% ribs
+for i = 1:numel(precisePhaseBranchesStrDom)
+    plot_branch3(precisePhaseBranchesStrDom(i,1), paramStrDom, ...
+        'nunst_color',{precisePhaseBranchesStrDom(i,1).nunst, globalmax}, ...
+        'add_2_gcf',1, ...
+        'axes_indParam', ...
+        {paramStrDom.feed_phase.index, ...
+        paramStrDom.feed_ampli.index, ...
+        'x1'}, ...
+        'PlotStyle', { 'LineStyle', 'None', 'Marker', '.' } );
+end
