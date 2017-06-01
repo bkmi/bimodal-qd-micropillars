@@ -450,7 +450,7 @@ for i = 1:numel(botSpinesStrDom)
         'PlotStyle', { 'LineStyle', 'None', 'Marker', '.' } );
 end
 
-ylim([0.32,0.36])
+% ylim([0.32,0.36])
 
 % % All hopfs and folds
 % for i = 1:numel(hopfPkgStrDom)
