@@ -19,14 +19,15 @@ addpath(strcat(present_working_directory,'/scripts/simple_run/'))
 addpath(strcat(present_working_directory,'/scripts/IOcurveScripts/'))
 addpath(strcat(present_working_directory,'/scripts/prez_scripts/'))
 addpath(strcat(present_working_directory,'/scripts/bifurcationSelfFB/'))
+addpath(strcat(present_working_directory,'/scripts/report/'))
 
 
 %% DDE-BIFTOOL
 addpath(strcat(present_working_directory,'/ddebiftool_multirot/')) % Multi_rot
-addpath('~/dde_biftool_v3.1.1/ddebiftool/'); 
-addpath('~/dde_biftool_v3.1.1/ddebiftool_extra_psol/');
-addpath('~/dde_biftool_v3.1.1/ddebiftool_utilities/');
-addpath('~/dde_biftool_v3.1.1/ddebiftool_extra_rotsym/');
+addpath(strcat(present_working_directory,'/dde_biftool_v3.1.1/ddebiftool/')); 
+addpath(strcat(present_working_directory,'/dde_biftool_v3.1.1/ddebiftool_extra_psol/'));
+addpath(strcat(present_working_directory,'/dde_biftool_v3.1.1/ddebiftool_utilities/'));
+addpath(strcat(present_working_directory,'/dde_biftool_v3.1.1/ddebiftool_extra_rotsym/'));
 
 %% Plotting
 addpath(strcat(present_working_directory,'/BrewerMap/'))
