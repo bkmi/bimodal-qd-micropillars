@@ -4,6 +4,11 @@
 % bistability. (Where both the strong mode and the weak mode have a stable
 % solution which dominates the intensity output.) Specifically, this one is
 % used for the case where the weak mode feedsback into the weak mode.
+%
+% However, notice that this one isn't finished. Luckily, you can consult
+% fbAmp_vs_curAmp_bistability_diag.m in this same folder. You will find the
+% necessary techniques to create a beautiful plot for the a system where
+% weak feeds into weak.
 
 feedPhaseMat = [1, 1; 1, 1];
 feedAmpMat = [0, 0; 0, 1];
