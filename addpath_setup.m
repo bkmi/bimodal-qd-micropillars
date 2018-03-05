@@ -2,7 +2,10 @@ function [  ] = addpath_setup(  )
 %This function adds the relevant folders to matlab path.
 
 %% My Files
-present_working_directory = pwd;
+filepath = mfilename('fullpath');
+parts = strsplit(filepath, '\');
+part = parts(1:end-1);
+present_working_directory = strjoin(part, '\');
 addpath(present_working_directory)
 
 %funcs
