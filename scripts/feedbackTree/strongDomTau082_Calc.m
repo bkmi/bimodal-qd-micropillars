@@ -1,6 +1,6 @@
 %% load strongDom, tau = 0.83
 treeLoader('datadir_specific', ...
-    '/home/bkmiller/qd-micropillar-laser-project/data_bimodal-qd-micropillars/zeroPhaseOffsetJ=560uA/strongDomAlpha=0/tau_fb=0.83ns/');
+    strcat(data_directory(), 'zeroPhaseOffsetJ=560uA/strongDomAlpha=0/tau_fb=0.83ns/'));
 
 
 %% more stst sweeps
@@ -202,5 +202,5 @@ phaseTest3nunst = pickAndSwitch(funcs, ...
 
 %% For weakDom, tau = 0.83
 % treeLoader('datadir_specific', ...
-%     '/home/bkmiller/qd-micropillar-laser-project/data_bimodal-qd-micropillars/zeroPhaseOffsetJ=560uA/weakDomAlpha=0/tau_fb=0.83ns/');
+%     strcat(data_directory(), '/zeroPhaseOffsetJ=560uA/weakDomAlpha=0/tau_fb=0.83ns/'));
 

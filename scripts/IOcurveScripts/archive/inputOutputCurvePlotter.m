@@ -13,7 +13,7 @@ greencol = brewermap(colorNum,'Greens');
 linewidth = 2;
 
 % save location
-% datadir = '/home/bkmiller/qd-micropillar-laser-project/data_bimodal-qd-micropillars/inputOutput/';
+% datadir = strcat(data_directory(), '/inputOutput/');
 
 % Update Jarray
 JarrayScaledTOMicro = Jarray * 1e6;

@@ -27,7 +27,7 @@ p = inputParser;
 % General option defaults
 p.addParameter('include', cell(0));
 p.addParameter('exclude', cell(0));
-p.addParameter('datadir_parent', strcat(main_directory(), '..', '\data_bimodal-qd-micropillars\'))
+p.addParameter('datadir_parent', data_directory())
 p.addParameter('datadir_specific','')
 p.addParameter('overwrite',0)
 

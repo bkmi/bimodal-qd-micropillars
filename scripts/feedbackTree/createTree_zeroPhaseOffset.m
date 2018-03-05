@@ -58,9 +58,7 @@ J = 560e-6;
 alphas = 0;
 
 % directory creation
-base_dir = '/home/bkmiller/qd-micropillar-laser-project/';
-datadir = strcat(base_dir,'data_bimodal-qd-micropillars/');
-trunkdir = strcat(datadir,'zeroPhaseOffsetJ=',num2str(J*1e6),'uA/');
+trunkdir = strcat(data_directory(), 'zeroPhaseOffsetJ=', num2str(J*1e6), 'uA/');
 weakDirList = cell(0);
 strongDirList = cell(0);
 

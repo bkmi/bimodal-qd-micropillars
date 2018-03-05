@@ -25,7 +25,7 @@ feedAmpMat = [1, 0; 0, 0];
 fbAmp = [0, 0.1, 0.2, 0.3, 0.4, 0.5];
 
 % save location
-datadir = '/home/bkmiller/qd-micropillar-laser-project/data_bimodal-qd-micropillars/inputOutput/';
+datadir = strcat(data_directory(), '/inputOutput/');
 
 % Save extras: fbAmp, numPoints
 save([datadir, ...

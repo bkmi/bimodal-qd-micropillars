@@ -6,7 +6,7 @@
 clear;
 
 % save location
-datadir = '/home/bkmiller/qd-micropillar-laser-project/data_bimodal-qd-micropillars/str2strFB/';
+datadir = strcat(data_directory(), '/str2strFB/');
 while isdir(datadir) == 0;
     mkdir(datadir);
 end
