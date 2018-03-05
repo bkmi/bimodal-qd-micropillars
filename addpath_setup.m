@@ -2,10 +2,7 @@ function [  ] = addpath_setup(  )
 %This function adds the relevant folders to matlab path.
 
 %% My Files
-filepath = mfilename('fullpath');
-parts = strsplit(filepath, '\');
-part = parts(1:end-1);
-present_working_directory = strjoin(part, '\');
+present_working_directory = main_directory();
 addpath(present_working_directory)
 
 %funcs
@@ -36,4 +33,3 @@ addpath(strcat(present_working_directory,'/dde_biftool_v3.1.1/ddebiftool_extra_r
 addpath(strcat(present_working_directory,'/BrewerMap/'))
 
 end
-
