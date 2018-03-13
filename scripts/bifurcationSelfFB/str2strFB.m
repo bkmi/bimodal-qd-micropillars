@@ -31,7 +31,7 @@ clear;
 
 % save location
 datadir = strcat(data_directory(), '/str2strFB/');
-while isdir(datadir) == 0;
+while isdir(datadir) == 0
     mkdir(datadir);
 end
 

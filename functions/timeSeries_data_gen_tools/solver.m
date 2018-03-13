@@ -40,26 +40,10 @@ function [ dde23_soln, figHandle ] = solver( hist, timeSpan, ...
 %           information check out the following link:
 %         https://www.mathworks.com/help/matlab/ref/ddeset.html#f81-1031913
 %           ddeset('RelTol',10^-8,'OutputFcn', @odeplot)
-%       'save_name' = 'dde23_soln_name'
-%           The solver will save the dde23_soln as 'dde23_soln_name' in 
-%           a datadir_specific given by master_options. It will overwrite.
 %       'quiet' = 0, 1
 %           0 -> usual output.
 %           1 -> no disp output.
-%
-%   master_options:
-%       'save' = 0, 1
-%           By default, this is set to 0. When 'save' = 0, the function
-%           does not try to save anything. When 'save' = 1, the function 
-%           tries to save ________.
-%       'datadir_specific' = '../data_bimodal-qd-micropillars/'
-%           By default, this is set as above.
-%       'dimensional' = 0, 1
-%           By default, this is set to 0. When 'dimensional' = 0, the
-%           function applies a non-dimensionalized system. When
-%           'dimensional' = 1, the function applies a dimensionalized
-%           system.
-%
+
 
 
 
@@ -80,9 +64,10 @@ p.addParameter('save_name', 'dde23_soln')
 p.addParameter('quiet', 0)
 
 % Master option defaults
-p.addParameter('save',0)
-p.addParameter('datadir_parent','../data_bimodal-qd-micropillars/')
-p.addParameter('datadir_specific','../data_bimodal-qd-micropillars/')
+% historical reasons
+p.addParameter('save', 0)
+p.addParameter('datadir_parent', strcat(data_directory(), 'output_data/'))
+p.addParameter('datadir_specific', strcat(data_directory(), 'output_data/'))
 p.addParameter('dimensional',0)
 
 parse(p,varargin{:})
@@ -102,60 +87,28 @@ end
 feed_phaseMatrix = param.cplPar.feed_phaseMatrix; 
 feed_ampliMatrix = param.cplPar.feed_ampliMatrix;
 
+%define solver ready func, dimensionless
+sys_4solver = @(x)nonDim_bimodalSystem_CnstCplRatio(...
+    x(1,1,:)+1i*x(2,1,:), x(1,2,:)+1i*x(2,2,:),... %EF1
+    x(3,1,:)+1i*x(4,1,:), x(3,2,:)+1i*x(4,2,:),... %EF2
+    x(5,1,:),x(6,1,:),...
+    feed_phaseMatrix, feed_ampliMatrix, ...
+    par(1),par(2),par(3),par(4),par(5),par(6),par(7),par(8),par(9), ...
+    par(10),par(11),par(12),par(13),par(14),par(15),par(16), ...
+    par(17),par(18),par(19),par(20),par(21),par(22),par(23), ...
+    par(24),par(25),par(26),par(27),par(28),par(29));
 
-%{
-% Disabled because it causes problems with timeSeries_atBranchPt
-% Set save to 1 when the user called 'save_name'
-if ~any(strcmp('save_name',p.UsingDefaults))
-    options.save = 1;
+if options.quiet == 0
+    fprintf('Solver is using dimensionless units for output.\n')
 end
-%}
 
-% Organize behavior from options
-% DIMENSION HANDLER
-if options.dimensional == 1
-    error('Dimensional systems are not yet supported')
-%     %define solver ready func, dimensional units
-%     warning('this does not include alpha_par')
-%     sys_4solver=@(x)qd_1ef_sys(x(1,1)+1i*x(2,1),x(1,2)+1i*x(2,2), ...
-%         x(3,1),x(3,2),x(4,1),x(4,2), ... 
-%         par(1),par(2),par(3),par(4),par(5),par(6),par(7),par(8),par(9), ...
-%         par(10),par(11),par(12),par(13),par(14),par(15),par(16), ...
-%         par(17),par(18),par(19),par(20),par(21),par(22),par(23), ...
-%         par(24),par(25),par(26),par(27),par(28),par(29));
-% 
-%     fprintf('Solver is using dimensional units for output.\n')
-%     dde23_ef_units = '(V/m)';
-%     dde23_time_units = 's';
-%     dde23_n_units = 'm^{-2}';
-
-elseif options.dimensional == 0
-    %define solver ready func, dimensionless
-    sys_4solver = @(x)nonDim_bimodalSystem_CnstCplRatio(...
-        x(1,1,:)+1i*x(2,1,:), x(1,2,:)+1i*x(2,2,:),... %EF1
-        x(3,1,:)+1i*x(4,1,:), x(3,2,:)+1i*x(4,2,:),... %EF2
-        x(5,1,:),x(6,1,:),...
-        feed_phaseMatrix, feed_ampliMatrix, ...
-        par(1),par(2),par(3),par(4),par(5),par(6),par(7),par(8),par(9), ...
-        par(10),par(11),par(12),par(13),par(14),par(15),par(16), ...
-        par(17),par(18),par(19),par(20),par(21),par(22),par(23), ...
-        par(24),par(25),par(26),par(27),par(28),par(29));
-
-    if options.quiet == 0;
-        fprintf('Solver is using dimensionless units for output.\n')
-    end
-    dde23_ef_units = '(\epsilon_{ss} \epsilon_{tilda})^{-1/2}';
-    dde23_time_units = '(\tau_{sp})';
-    dde23_n_units = '(S^{in} \tau_{sp})^{-1}';
-
-else
-    error('Error selecting output in dimensional or non-dimensional units.')
-
-end
+dde23_ef_units = '(\epsilon_{ss} \epsilon_{tilda})^{-1/2}';
+dde23_time_units = '(\tau_{sp})';
+dde23_n_units = '(S^{in} \tau_{sp})^{-1}';
 
 %% Solver + Plotter
 % Setup/use dde23 solver
-if options.quiet == 0;
+if options.quiet == 0
     if isa(hist,'function_handle')
         % If hist is a function
         fprintf('History vector is a function. \n')
@@ -180,29 +133,6 @@ if options.plot == 1
         dde23_time_units, dde23_ef_units, dde23_n_units );
 else
     figHandle = 0;
-end
-
-%% Save
-% Save, if necessary
-datadir_specific = options.datadir_specific;
-
-% Where will it save?
-if options.quiet == 0;
-    if options.save == 1
-        fprintf(strcat('\n\n Saving in subfolder:\n', datadir_specific,'\n'))
-    end
-end
-    
-if options.save == 1 && ...
-        ~exist(strcat(datadir_specific,options.save_name,'.mat'),'file')
-    save(strcat(datadir_specific,options.save_name),'dde23_soln', ...
-        'dde23_ef_units','dde23_time_units','dde23_n_units')
-elseif options.save == 1 && ...
-        exist(strcat(datadir_specific,options.save_name,'.mat'),'file')
-    warning('That file %s already exists. Overwriting.', ...
-        strcat(datadir_specific,options.save_name) )
-    save(strcat(datadir_specific,options.save_name),'dde23_soln', ...
-        'dde23_ef_units','dde23_time_units','dde23_n_units')
 end
 
 end

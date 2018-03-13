@@ -92,7 +92,7 @@ p.addParameter('reverse',0)
 p.addParameter('plot_prog', 1)
 p.addParameter('minimal_real_part', -0.5)
 p.addParameter('save_name', 'branch_stst')
-p.addParameter('opt_inputs',{'extra_condition',1,'print_residual_info',0})
+p.addParameter('opt_inputs', {'extra_condition',1,'print_residual_info',0})
 
 % Master option defaults
 p.addParameter('save',0)
@@ -243,6 +243,8 @@ ind_contin_param_w_omega = [ind_contin_param, ...
 if options.plot_prog == 1
     figure;
     AX_branch_stst = gca;
+else
+    AX_branch_stst = 0;
 end
 branch_stst.method.continuation.plot = options.plot_prog;
 

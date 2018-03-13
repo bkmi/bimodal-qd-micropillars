@@ -13,6 +13,7 @@ addpath(strcat(present_working_directory,'/functions/bifcont_data_gen_tools/'))
 addpath(strcat(present_working_directory,'/functions/data_analysis_tools/'))
 
 %scripts
+addpath(strcat(present_working_directory,'/calculate/'))
 addpath(strcat(present_working_directory,'/scripts/'))
 addpath(strcat(present_working_directory,'/scripts/feedbackTree/'))
 addpath(strcat(present_working_directory,'/scripts/simple_run/'))
