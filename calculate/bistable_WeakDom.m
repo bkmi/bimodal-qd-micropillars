@@ -80,7 +80,7 @@ for i = 1:length(ind_fold_phase_stst)
         switch ME.identifier
             case 'br_contn:start'
                 warning(ME.message);
-                warning(strcat('During branch=',fold_active_branch_name));
+                warning(strcat('During branch=',ind_fold_phase_stst(i)));
                 fold_branches(ind_fold_phase_stst(i)) = ME;
             otherwise
                 rethrow(ME)
@@ -100,13 +100,15 @@ for i = 1:length(ind_hopf_high_phase_stst)
             ind_hopf_high_phase_stst(i), ...
             [param.feed_phase.index, param.feed_ampli.index], 100, ...
             param,...
+            'max_step', [param.feed_phase.index, (1)*pi/128, ... 
+                param.feed_ampli.index, .0001], ...
             'plot_prog', 0, ...
             'save',0);
     catch ME
         switch ME.identifier
             case 'br_contn:start'
                 warning(ME.message);
-                warning(strcat('During branch=',fold_active_branch_name));
+                warning(strcat('During branch=',ind_hopf_high_phase_stst(i)));
                 hopf_branches(ind_hopf_high_phase_stst(i)) = ME;
             otherwise
                 rethrow(ME)
