@@ -5,6 +5,9 @@ function [  ] = addpath_setup(  )
 present_working_directory = main_directory();
 addpath(present_working_directory)
 
+%Specifics
+addpath(strcat(present_working_directory,'/specific_bifurcations/'))
+
 %funcs
 addpath(strcat(present_working_directory,'/functions/'))
 addpath(strcat(present_working_directory,'/functions/numerical_systems/'))
