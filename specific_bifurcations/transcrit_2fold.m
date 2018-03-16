@@ -1,12 +1,6 @@
 %% Setup General
 clear;
 
-% save location
-datadir = strcat(data_directory(), '/str2strFB_2/');
-while isdir(datadir) == 0
-    mkdir(datadir);
-end
-
 % Laser/FB settings
 current = 560e-6;
 fbAmp = 0.2;
@@ -33,7 +27,8 @@ param = setup_params_nonDim_CnstCplRatio(...
 
 % get funcs
 funcs = set_biffuncs(feedPhaseMat, feedAmpMat);
-opt_inputs = {'extra_condition',1,'print_residual_info',0};
+opt_inputs = {'extra_condition',1,'print_residual_info',0, ...
+              'plot', 0, 'plot_progress', 0};
 
 % get starting points
 weak_time_series = turn_on(param, [1e-9, 0, 1e-9, 0, 0]);
@@ -140,6 +135,18 @@ second_amp_StrDom = br_rvers(second_amp_StrDom);
 
 % stability analysis
 second_amp_StrDom = branch_stability(funcs, second_amp_StrDom);
+
+%% save?
+if 1
+    % save location
+    datadir = strcat(data_directory(), 'specific_bifurcations/');
+    while isdir(datadir) == 0
+        mkdir(datadir);
+    end
+    
+    save(strcat(datadir, 'transcrit_2fold'))
+end
+
 
 %% Plot Weak
 plot_branch3( init_amp_WeakDom, ...
