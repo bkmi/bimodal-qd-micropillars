@@ -3,7 +3,7 @@ function [ branch ] = bcont( funcs, branch, numForward, numRvers )
 [branch,~,~,~] = br_contn(funcs, branch, numForward);
 if numRvers > 0
     branch = br_rvers(branch);
-    [branch,~,~,~] = br_contn(funcs,branch,100);
+    [branch,~,~,~] = br_contn(funcs, branch, numRvers);
 end
 
 end
