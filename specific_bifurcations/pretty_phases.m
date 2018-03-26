@@ -133,19 +133,6 @@ if 0
     'funcs', 'rephases', 'param', 'st_amp', 'st_phase', 'opt_inputs')
 end
 
-%% save just the collection
-if 0
-    % save location
-    datadir = strcat(data_directory(), 'specific_bifurcations/');
-    while isdir(datadir) == 0
-        mkdir(datadir);
-    end
-    
-    save(strcat(datadir, 'pretty_phase'), ...
-        'funcs', 'phases', 'param', ...
-        'st_amp','st_phase', 'opt_inputs')
-end
-
     
 %% plot
 figure;
