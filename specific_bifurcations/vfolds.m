@@ -333,7 +333,7 @@ end
 
 
 %% save?
-if 1
+if 0
     % save location
     datadir = strcat(data_directory(), 'specific_bifurcations/');
     while isdir(datadir) == 0
@@ -686,7 +686,7 @@ plot_branch3( phase_vhigh, ...
 
 
 %% save everything
-if 1
+if 0
     % save location
     datadir = strcat(data_directory(), 'specific_bifurcations/');
     while isdir(datadir) == 0
@@ -771,7 +771,7 @@ for i = 1:numel(phases)
 end
 
 %% save just the collection
-if 1
+if 0
     % save location
     datadir = strcat(data_directory(), 'specific_bifurcations/');
     while isdir(datadir) == 0
