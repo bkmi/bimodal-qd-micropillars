@@ -30,8 +30,8 @@
 clear;
 
 % save location
-datadir = strcat(data_directory(), '/str2strFB/');
-while isdir(datadir) == 0;
+datadir = strcat(data_directory(), '/str2strFB_2/');
+while isdir(datadir) == 0
     mkdir(datadir);
 end
 
@@ -1195,7 +1195,7 @@ for j = 1:numel(ampPkgStrDom)
     % extra spines
     for i = 1:numel(branchAmpStrDom)
         
-        if branchAmpStrDom(i,1).error == 1;
+        if branchAmpStrDom(i,1).error == 1
             continue
         end
         
