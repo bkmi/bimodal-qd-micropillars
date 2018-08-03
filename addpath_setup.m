@@ -7,6 +7,7 @@ addpath(present_working_directory)
 
 %Specifics
 addpath(strcat(present_working_directory,'/specific_bifurcations/'))
+addpath(strcat(present_working_directory,'/specific_bif_plotting/'))
 
 %funcs
 addpath(strcat(present_working_directory,'/functions/'))
