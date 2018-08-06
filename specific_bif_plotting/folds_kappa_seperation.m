@@ -19,9 +19,6 @@ for i = 1:numel(folds)
     'add_2_gcf', 1)
 end
 
-
-hold on
-
 % bigger seperation (4.5e10)
 clear;
 load(strcat(specific_bif_data_dir(), ...
