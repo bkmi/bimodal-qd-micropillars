@@ -9,7 +9,7 @@ clear;
 load(strcat(specific_bif_data_dir(), ...
     'folds_main.mat'))
 
-figure;
+f = figure;
 for i = 1:numel(folds)
     plot_branch3( folds{i}, ...
     param, ...
@@ -47,6 +47,19 @@ for i = 1:numel(folds)
     'PlotStyle', { 'LineStyle', '-', 'Marker', '.' }, ...
     'add_2_gcf', 1)
 end
+
+key = {'k', 'b', 'r'};
+hold on
+h = zeros(numel(key), 1);
+for i = 1:numel(h)
+    h(i) = plot(NaN, NaN, strcat('o', key{i}));
+end
+lgd = legend(h, '4.1e10', '4.5e10', '4.7e10','Location','southeast');
+title(lgd,'\kappa_w');
+
+zlabel('Strong Field Intensity')
+title('Fold Continuations')
+saveas(gca, strcat(data_directory(), 'folds_mode_seperation.png'))
 
 % %% Find the good bifurcations...
 % clear;

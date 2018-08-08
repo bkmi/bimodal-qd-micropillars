@@ -46,3 +46,16 @@ for i = 1:numel(folds)
     'PlotStyle', { 'LineStyle', '-', 'Marker', '.' }, ...
     'add_2_gcf', 1)
 end
+
+key = {'k', 'b', 'r'};
+hold on
+h = zeros(numel(key), 1);
+for i = 1:numel(h)
+    h(i) = plot(NaN, NaN, strcat('o', key{i}));
+end
+lgd = legend(h, '0.8 ns', '0.6 ns', '0.4 ns','Location','southeast');
+title(lgd,'\tau_{fb}');
+
+zlabel('Strong Field Intensity')
+title('Fold Continuations')
+saveas(gca, strcat(data_directory(), 'tau_fb_seperation.png'))
