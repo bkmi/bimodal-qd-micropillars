@@ -39,7 +39,7 @@ legend(h, 'f1', 'f2', 'f3', 'f4', 'f5', 'f6');
 
 clear;
 load(strcat(specific_bif_data_dir(), ...
-    'amplitude_continuation_emcs.mat'))
+    'amplitude_continuation_emcs_pruned.mat'))
 
 % plot all emcs as phase = 0
 shape = size(famp_cur560_phase0);
@@ -94,7 +94,7 @@ legend(h, 'f1', 'f2', 'f3', 'f4', 'f5', 'f6');
 
 clear;
 load(strcat(specific_bif_data_dir(), ...
-    'amplitude_continuation_emcs.mat'))
+    'amplitude_continuation_emcs_pruned.mat'))
 
 % plot all emcs as phase = pi/2
 shape = size(famp_cur560_phasePi2);
@@ -149,7 +149,7 @@ legend(h, 'f1', 'f2', 'f3', 'f4', 'f5', 'f6');
 
 clear;
 load(strcat(specific_bif_data_dir(), ...
-    'amplitude_continuation_emcs.mat'))
+    'amplitude_continuation_emcs_pruned.mat'))
 
 % plot all emcs as phase = pi/4
 shape = size(famp_cur560_phasePi4);
