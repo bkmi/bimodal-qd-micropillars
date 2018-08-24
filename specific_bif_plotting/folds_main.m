@@ -30,6 +30,16 @@ for i = 1:numel(folds)
     'add_2_gcf', 1)
 end
 
+% add hopfs
+for i = 1:numel(hopf_branches)
+    plot_branch3( hopf_branches{i}, ...
+    param, ...
+    'axes_indParam', {param.feed_phase.index, param.feed_ampli.index, 'x1'}, ...
+    'color', 'c', ...
+    'PlotStyle', { 'LineStyle', '-', 'Marker', '.' }, ...
+    'add_2_gcf', 1)
+end
+
 hold on
 for i = 1:numel(h)
     h(i) = plot(NaN, NaN, strcat('o', key{i}));

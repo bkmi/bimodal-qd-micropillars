@@ -11,6 +11,7 @@ end
 
 hopf = cell(2,1);
 hopf_inds = [1, 3];
+%%
 
 for i = 2 % 1:numel(amp)
     [hopf{i}, ~]=SetupHopf( ...
@@ -22,9 +23,12 @@ for i = 2 % 1:numel(amp)
         'dir', param.feed_phase.index, ...
         opt_inputs{:},...
         st_bif_cur_amp{:});
-    hopf{i} = bcont(funcs, hopf{i}, 250, 250);
+    hopf{i} = bcont(funcs, hopf{i}, 50, 0);
 end
 
+
+%% 
+hopf{2} = bcont(funcs, hopf{2}, 100, 0);
 
 f = figure;
 for i = 1:2

@@ -45,7 +45,10 @@ for i = 1:2 % numel(inds_hopf)
         opt_inputs{:},...
         st_bif{:}); 
     
-    hopf_branches{i} = bcont(funcs, hopf_branches{i}, 250, 250);
+    hopf_branches{i} = bcont(funcs, hopf_branches{i}, 250, 0);
+    if i == 1
+        hopf_branches{i} = bcont(funcs, hopf_branches{i}, 250, 0);
+    end
 end
 
 
@@ -115,6 +118,8 @@ plot_RPO3( rw_branch, ...
     'color', 'r', ...
     'add_2_gcf', 1)
 
+st_bif{10} = [param.feed_ampli.index hopf_branches{2}.point(end).parameter(param.feed_ampli.index)];
+
 [hopf1, ~]=SetupHopf( ...
     funcs, ...
     phase, ...
@@ -126,6 +131,11 @@ plot_RPO3( rw_branch, ...
     st_bif{:}); 
     
 hopf1 = bcont(funcs, hopf1, 250, 250);
+hopf1 = br_rvers(hopf1);
+
+for i = 1:numel(hopf1.point)
+    hopf_branches{2}.point(end+1) = hopf1.point(i);
+end
 
 plot_branch3( hopf1, ...
     param, ...
