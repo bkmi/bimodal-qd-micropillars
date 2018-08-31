@@ -31,15 +31,16 @@ class Branch:
         hopf, fold = np.zeros_like(nunst, dtype=np.bool), np.zeros_like(nunst, dtype=np.bool)
         hopf[ind_hopf, :] = True
         fold[ind_fold, :] = True
-        intensity_x1x2 = np.square(np.linalg.norm(x[:, 1:2], axis=1))[:, np.newaxis]
+        intensity_x1x2 = np.square(np.linalg.norm(x[:, 0:2], axis=1))[:, np.newaxis]
 
         self.variable_names = variable_names()
         self.param_names = param_names()
-        self.extended_names = ['|Es|^2', 'nunst', 'hopf', 'fold']
+        self.extended_names = ['|Es|^2', 'nunst']
 
-        data = np.concatenate([x, params, intensity_x1x2, nunst, hopf, fold], axis=1)
+        data = np.concatenate([x, params, intensity_x1x2, nunst], axis=1)
         col_names = self.variable_names + self.param_names + self.extended_names
         self._df = pd.DataFrame(data=data, columns=col_names)
+        self._df = self._df.assign(hopf=hopf, fold=fold)
 
         self._active_params = self._get_active_params()
 
@@ -55,6 +56,10 @@ class Branch:
     @property
     def df(self):
         return self._df
+
+    @property
+    def params(self):
+        return self.df.loc[:, self.param_names]
 
     @property
     def cont_params(self):
